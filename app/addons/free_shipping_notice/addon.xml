@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <addon scheme="3.0">
     <id>free_shipping_notice</id>
-    <version>1.0.2</version>
+    <version>1.0</version>
     <priority>4294967294</priority>
     <position>0</position>
     <status>active</status>
@@ -15,7 +15,6 @@
                     <item id="display_product_details">
                         <type>checkbox</type>
                         <name>Enable</name>
-                        <tooltip/>
                     </item>
                     <item id="header">
                         <type>header</type>
@@ -29,7 +28,7 @@
                     <item id="display_product_details_text_ineligible_add_more">
                         <type>textarea</type>
                         <name>If cart total is below the free shipping threshold</name>
-                        <default_value>FREE SHIPPING OVER [required_amount]&#x20AC;.&lt;br&gt;Add more products worth &lt;b&gt;[needed_amount]&#x20AC;&lt;/b&gt; and get &lt;u&gt;free delivery&lt;/u&gt;.</default_value>
+                        <default_value>FREE SHIPPING OVER [required_amount].&lt;br&gt;Add more products worth &lt;b&gt;[needed_amount]&#x20AC;&lt;/b&gt; and get &lt;u&gt;free delivery&lt;/u&gt;.</default_value>
                     </item>
                     <item id="display_product_details_text_ineligible_add_this">
                         <type>textarea</type>
