@@ -109,6 +109,10 @@ function fn_free_shipping_notice_get_variables($settings, $product, $cart, $auth
     $variables['cart_empty'] = empty($cart['products']);
     $variables['current_product_in_cart'] = false;
 
+    // total = order final total (including shipping cost)
+    // subtotal = order total without shipping cost
+    $variables['cart_total'] = $cart['subtotal'];
+
     // check if current product is already in cart
     // $hash - create hash key to index result in cache
     $hash = array();
@@ -146,9 +150,7 @@ function fn_free_shipping_notice_get_variables($settings, $product, $cart, $auth
 
     // Code block borrowed from CS-Cart's core fn_calculate_cart_content() function
     $shippings = fn_free_shipping_notice_calculate_cart_shipping($auth, $cart);
-
     // at this point, an empty $cart would now contain the current product which was added locally by the shipping estimation function
-    $variables['cart_total'] = $cart['total'];
 
     $has_free_shipping_rate = false;
     $min_required_amount = PHP_INT_MAX;
@@ -177,7 +179,7 @@ function fn_free_shipping_notice_get_variables($settings, $product, $cart, $auth
                     if ($variables['cart_empty']) {
                         $variables['needed_amount'] = $min_required_amount;
                     } else {
-                        $variables['needed_amount'] = $min_required_amount - $cart['total'];
+                        $variables['needed_amount'] = $min_required_amount - $cart['subtotal'];
                     }
                 }
             }
@@ -201,7 +203,7 @@ function fn_free_shipping_notice_get_variables($settings, $product, $cart, $auth
     // display_product_details_text_ineligible_add_more // Add more products
 
     if ($variables['cart_empty']) {
-
+        // this is the potential cart total (if the customer would've add current product)
         if ($cart['total'] >= $min_required_amount) {
             $text = $settings['display_product_details_text_ineligible_add_this'];
         } else {
