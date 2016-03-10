@@ -262,7 +262,8 @@ function fn_free_shipping_notice_display_product_details_variables_info()
 function fn_free_shipping_notice_display_product_details_hooks_info()
 {
     $file = 'fsn-visual-guide.png';
-    $path = FREE_SHIPPING_NOTICE_ADDON_DIR . DIRECTORY_SEPARATOR . $file;
+    $addonPath = defined('FREE_SHIPPING_NOTICE_ADDON_DIR') ? FREE_SHIPPING_NOTICE_ADDON_DIR : dirname(__FILE__);
+    $path = $addonPath . DIRECTORY_SEPARATOR . $file;
     $mime = 'image/png';
     if (file_exists($path)) {
         $contents = file_get_contents($path);
