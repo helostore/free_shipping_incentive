@@ -1,13 +1,10 @@
-.fsn-box {
-}
-
 @keyframes pulse_animation {
   0% { transform: scale(1); }
   20% { transform: scale(1); }
   60% { transform: scale(1.04); }
   100% { transform: scale(1); }
 }
-.push-button:hover {
+.fsn-push-button:hover {
   animation-name: pulse_animation;
   animation-duration: 1000ms;
   transform-origin:70% 70%;
@@ -15,7 +12,7 @@
   animation-timing-function: linear;
 }
 
-.push-button {
+.fsn-push-button {
   color:#FFF;
   display:inline-block;
   text-decoration:none;
@@ -36,7 +33,7 @@
   box-shadow: 0px 9px 0px #00448B;
 }
 
-.push-button:active{
+.fsn-push-button:active{
   -webkit-box-shadow: 0px 2px 0px #84261a;
   -moz-box-shadow: 0px 2px 0px #84261a;
   box-shadow: 0px 2px 0px #84261a;
@@ -44,13 +41,13 @@
   top:7px;
 }
 
-.push-button:hover {
+.fsn-push-button:hover {
   background: #3195FF;
   color: #fff;
   text-decoration: none;
 }
 
-.overlay {
+.fsn-overlay {
   position: fixed;
   top: 0;
   bottom: 0;
@@ -62,12 +59,12 @@
   opacity: 0;
   z-index: 99999;
 }
-.overlay:target {
+.fsn-overlay:target {
   visibility: visible;
   opacity: 1;
 }
 
-.popup {
+.fsn-popup {
   margin: 70px auto;
   padding: 20px;
   background: #fff;
@@ -76,18 +73,18 @@
   position: relative;
   transition: all 5s ease-in-out;
 }
-.popup img {
+.fsn-popup img {
   width: 100%;
   height: auto;
   max-width: 100%;
 }
 
-.popup h2 {
+.fsn-popup h2 {
   margin-top: 0;
   color: #333;
   font-family: Tahoma, Arial, sans-serif;
 }
-.popup .close {
+.fsn-popup .close {
   position: absolute;
   top: 20px;
   right: 30px;
@@ -97,19 +94,20 @@
   text-decoration: none;
   color: #333;
 }
-.popup .close:hover {
+.fsn-popup .close:hover {
   color: #000;
 }
-.popup .content {
+.fsn-popup .content {
   max-height: 30%;
   overflow: auto;
 }
 
+.fsn-popup-content {
+
+}
+
 @media screen and (max-width: 700px){
-  .box{
-    width: 70%;
-  }
-  .popup{
+  .fsn-popup{
     width: 70%;
   }
 }

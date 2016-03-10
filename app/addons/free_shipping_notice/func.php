@@ -243,9 +243,24 @@ function fn_free_shipping_notice_format_text($settings, $product)
     return $text;
 }
 
+function fn_free_shipping_notice_display_product_details_variables_info()
+{
+    $html = '
+        <div class="control-group setting-wide">
+            <label class="control-label">' . __('fsn.variables') . '</label>
+            <div class="controls">
+            <ul>
+                <li><code>[cart_total]</code> - Current cart\'s total (excluding any shipping cost).</li>
+                <li><code>[required_amount]</code> - Cart total must equal or exceed this amount to benefit from free shipping. This amount is configured in the shipping methods rates.</li>
+                <li><code>[needed_amount]</code> - Difference amount needed to benefit from free shipping (ie. <code>[required_amount]</code> - <code>cart_total</code>).</li>
+            </ul>
+            </div>
+        </div>';
+
+    return $html;
+}
 function fn_free_shipping_notice_display_product_details_hooks_info()
 {
-
     $file = 'fsn-visual-guide.png';
     $path = FREE_SHIPPING_NOTICE_ADDON_DIR . DIRECTORY_SEPARATOR . $file;
     $mime = 'image/png';
@@ -255,33 +270,33 @@ function fn_free_shipping_notice_display_product_details_hooks_info()
         $image = ('data:' . $mime . ';base64,' . $base64);
         $title = __('help') . ' - Hooks Visual Guide';
         $html = '
-<div class="control-group setting-wide">
-    <label class="control-label"></label>
-    <div class="controls">
-        <div class="fsn-box">
-            <a class="push-button" href="#popup1">' . $title . '</a>
-        </div>
-    </div>
-</div>
+            <div class="control-group setting-wide">
+                <label class="control-label"></label>
+                <div class="controls">
+                    <div class="fsn-box">
+                        <a class="fsn-push-button" href="#popup1">' . $title . '</a>
+                    </div>
+                </div>
+            </div>
 
-<div id="popup1" class="overlay">
-  <div class="popup">
-    <h4>' . $title . '</h4>
-    <a class="close" href="#">&times;</a>
-    <div class="content">
-      <img src="' . $image . '" alt="' . $title . '" />
-      <p>To display the text in a custom template hook, the hook must include this code: </p>
-      <code>
-        {include file=&#x22;addons/free_shipping_notice/notices.tpl&#x22; hook=&#x22;&#x3C;your-custom-hook&#x3E;&#x22; position=&#x22;&#x3C;position&#x3E;&#x22;}
-      </code>
-      <br>
-        Where:
-        <br>
-        - &lt;your-custom-hook&gt; should be in the form: &lt;hook-directory-name&gt;:&lt;hook-file-name&gt; (ex.: products:add_to_cart)<br>
-        - &lt;position&gt; must be either pre or post<br>
-    </div>
-  </div>
-</div>';
+            <div id="popup1" class="fsn-overlay">
+              <div class="fsn-popup">
+                <h4>' . $title . '</h4>
+                <a class="close" href="#">&times;</a>
+                <div class="content">
+                  <img src="' . $image . '" alt="' . $title . '" style="max-width: 67%;" />
+                  <p>To display the text in a custom template hook, the hook must include this code: </p>
+                  <code>
+                    {include file=&#x22;addons/free_shipping_notice/notices.tpl&#x22; hook=&#x22;&#x3C;your-custom-hook&#x3E;&#x22; position=&#x22;&#x3C;position&#x3E;&#x22;}
+                  </code>
+                  <br>
+                    Where:
+                    <br>
+                    - &lt;your-custom-hook&gt; should be in the form: &lt;hook-directory-name&gt;:&lt;hook-file-name&gt; (ex.: products:add_to_cart)<br>
+                    - &lt;position&gt; must be either pre or post<br>
+                </div>
+              </div>
+            </div>';
         return $html;
     }
 

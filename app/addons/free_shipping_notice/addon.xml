@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <addon scheme="3.0">
     <id>free_shipping_notice</id>
-    <version>1.0.7</version>
+    <version>1.0.8</version>
     <priority>4294967294</priority>
     <position>0</position>
     <status>active</status>
@@ -19,6 +19,10 @@
                     <item id="header">
                         <type>header</type>
                         <name>Text to display</name>
+                    </item>
+                    <item id="display_product_details_variables_info">
+                        <type>info</type>
+                        <handler>fn_free_shipping_notice_display_product_details_variables_info</handler>
                     </item>
                     <item id="display_product_details_text_ineligible_empty_cart">
                         <type>textarea</type>
@@ -40,6 +44,9 @@
                         <name>If cart total is over the threshold and it benefits from free shipping</name>
                         <default_value>You get free delivery.</default_value>
                     </item>
+
+
+
 
                     <item id="header">
                         <type>header</type>

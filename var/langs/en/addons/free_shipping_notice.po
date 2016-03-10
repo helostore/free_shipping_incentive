@@ -25,23 +25,10 @@ msgctxt "SettingsOptions::free_shipping_notice::license"
 msgid "License key"
 msgstr "License key"
 
-msgctxt "Languages::auto_image_hint_title_a"
-msgid "Why, hello there!"
-msgstr "Why, hello there!"
-
-msgctxt "Languages::auto_image_hint_message_a"
-msgid "<span style=\"font-size: 170%;\"> &#9786; </span> Now that you activated <b>AutoImage Lite</b>, it's recommended to clear up the thumbnails cache by <a href=\"[link]\">clicking here</a>, so that shinny new thumbnails can be regenerated."
-msgstr "<span style=\"font-size: 170%;\"> &#9786; </span> Now that you activated <b>AutoImage Lite</b>, it's recommended to clear up the thumbnails cache by <a href=\"[link]\">clicking here</a>, so that shinny new thumbnails can be regenerated."
-
-msgctxt "Languages::auto_image_hint_title_d"
-msgid "I'm gonna go now. Buh bye.."
-msgstr "I'm gonna go now. Buh bye.."
-
-msgctxt "Languages::auto_image_hint_message_d"
-msgid "<span style=\"font-size: 170%;\"> &#9785; </span> But before that, you should <a href=\"[link]\">click here</a> to regenerate back the default CS-Cart thumbnails."
-msgstr "<span style=\"font-size: 170%;\"> &#9785; </span> But before that, you should <a href=\"[link]\">click here</a> to regenerate back the default CS-Cart thumbnails."
-
 msgctxt "Languages::my_sidekick_is_not_present"
 msgid "This add-on has a single requirement: Sidekick add-on. Please install and activate Sidekick first."
 msgstr "This add-on has a single requirement: Sidekick add-on. Please install and activate Sidekick first."
 
+msgctxt "Languages::fsn.variables"
+msgid "Variables that can be use in messages"
+msgstr "Variables that can be use in messages"
