@@ -1,0 +1,24 @@
+[
+    {
+        "version": "1.0.10",
+        "releaseDate": "2017-02-17 02:18:50",
+        "releaseTimestamp": "1487297930",
+        "hash": "e51358168ca4e1f1412b78cee73d8cf01ccf843c",
+        "commits": [
+            "[2017-02-17] Bumped version to 1.0.10",
+            "[2017-02-17] Bugfix: fixed compatibility with newer CS-Cart versions regarding out-of-stock options",
+            "[2016-03-10] Bumped version to 1.0.9",
+            "[2016-03-10] Bumped version to 1.0.8",
+            "[2016-03-10] Bumped version to 1.0.7",
+            "[2016-03-10] Fixed cart total\/subtotal issue",
+            "[2016-03-07] Bumped version to 1.0.6",
+            "[2016-03-07] Bumped version to 1.0.5",
+            "[2016-03-07] Bumped version to 1.0.4",
+            "[2016-03-07] Bumped version to 1.0.3",
+            "[2016-03-07] Bumped version to 1.0.2",
+            "[2016-03-07] Bumped version to 1.0.1",
+            "[2016-03-07] Fixed default messages",
+            "[2016-03-05] Bumped version to 1.0.2"
+        ]
+    }
+]
