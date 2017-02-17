@@ -1,4 +1,5 @@
 <?php
+use Tygh\Enum\ProductTracking;
 use Tygh\Http;
 use Tygh\Registry;
 use Tygh\Shippings\Shippings;
@@ -104,6 +105,12 @@ function fn_free_shipping_notice_display($hook, $position, $product)
 function fn_free_shipping_notice_get_variables($settings, $product, $cart, $auth)
 {
     static $cache = array();
+
+    $allowNegativeInventory = (Registry::get('settings.General.allow_negative_amount') == 'Y');
+
+    if (!$allowNegativeInventory && $product['tracking'] != ProductTracking::DO_NOT_TRACK && $product['amount'] == 0) {
+        return array();
+    }
 
     $variables = array();
     $variables['cart_empty'] = empty($cart['products']);

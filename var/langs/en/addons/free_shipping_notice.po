@@ -5,8 +5,8 @@ msgstr "Project-Id-Version: tygh"
 "Language: en_US"
 
 msgctxt "Addons::name::free_shipping_notice"
-msgid "Free Shipping Message"
-msgstr "Free Shipping Message"
+msgid "Free Shipping Incentive"
+msgstr "Free Shipping Incentive"
 
 msgctxt "Addons::description::free_shipping_notice"
 msgid "Drive up your conversion rates with 'Free Shipping' messages on your product pages. Moreover, this addon can inform the client how much more to buy to benefit from free shipping. | Created with love by HELOstore.com"
