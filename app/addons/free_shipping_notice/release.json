@@ -1,10 +1,11 @@
 [
     {
         "version": "1.0.11",
-        "releaseDate": "2017-02-18 02:39:25",
-        "releaseTimestamp": "1487385565",
-        "hash": "d2aacb07c7beeef0a8b1372c1a053c5f9c403944",
+        "releaseDate": "2017-02-18 02:39:31",
+        "releaseTimestamp": "1487385571",
+        "hash": "0195dfad2dca078c1268ff8251adfc2005be39e3",
         "commits": [
+            "[2017-02-18] Bumped version to 1.0.11",
             "[2017-02-18] Bumped version to 1.0.11",
             "[2017-02-18] Bugfix: fixed incompatibility with certain themes"
         ]
