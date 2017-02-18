@@ -77,7 +77,13 @@ function fn_free_shipping_notice_display($hook, $position, $product)
 
     $is_product_page = ($controller == 'products' && $mode == 'view');
     $is_main_product = true;
-    if (!empty($view)) {
+
+    if (!empty($_REQUEST['product_id'])) {
+        if ($_REQUEST['product_id'] != $product['product_id']) {
+            $is_main_product = false;
+        }
+
+    } else if (!empty($view)) {
         $mainProduct = $view->getTemplateVars('product');
         if (!empty($mainProduct)) {
             if ($mainProduct['product_id'] != $product['product_id']) {
