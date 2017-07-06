@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.0.14",
+        "releaseDate": "2017-07-06 12:01:38",
+        "releaseTimestamp": "1499342498",
+        "hash": "401e1c3be7ed7b656551c6c6bae2e80060e39036",
+        "commits": [
+            "[2017-07-06] Bumped version to 1.0.14",
+            "[2017-07-06]\tFix caching issue when text wasn't refreshing to unlogged\/guest visitors"
+        ]
+    },
+    {
         "version": "1.0.13",
         "releaseDate": "2017-07-06 07:04:07",
         "releaseTimestamp": "1499324647",
@@ -29,28 +39,6 @@
             "[2017-02-18] Bumped version to 1.0.11",
             "[2017-02-18] Bumped version to 1.0.11",
             "[2017-02-18] Bugfix: fixed incompatibility with certain themes"
-        ]
-    },
-    {
-        "version": "1.0.10",
-        "releaseDate": "2017-02-17 02:18:50",
-        "releaseTimestamp": "1487297930",
-        "hash": "e51358168ca4e1f1412b78cee73d8cf01ccf843c",
-        "commits": [
-            "[2017-02-17] Bumped version to 1.0.10",
-            "[2017-02-17] Bugfix: fixed compatibility with newer CS-Cart versions regarding out-of-stock options",
-            "[2016-03-10] Bumped version to 1.0.9",
-            "[2016-03-10] Bumped version to 1.0.8",
-            "[2016-03-10] Bumped version to 1.0.7",
-            "[2016-03-10] Fixed cart total\/subtotal issue",
-            "[2016-03-07] Bumped version to 1.0.6",
-            "[2016-03-07] Bumped version to 1.0.5",
-            "[2016-03-07] Bumped version to 1.0.4",
-            "[2016-03-07] Bumped version to 1.0.3",
-            "[2016-03-07] Bumped version to 1.0.2",
-            "[2016-03-07] Bumped version to 1.0.1",
-            "[2016-03-07] Fixed default messages",
-            "[2016-03-05] Bumped version to 1.0.2"
         ]
     }
 ]
