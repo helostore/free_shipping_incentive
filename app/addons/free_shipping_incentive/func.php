@@ -282,10 +282,8 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
 
     // Check lowest Free-Shipping-Threshold in promotions list.
     if (!empty($promotionsConditions)) {
-
         foreach ($promotionsConditions as $rule) {
             $requiredAmount = $rule['required_amount'];
-
             if ($min_required_amount > $requiredAmount) {
                 $min_required_amount = $requiredAmount;
                 $has_free_shipping_rate = true;
@@ -293,16 +291,9 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
 
             if ($has_free_shipping_rate && $min_required_amount < PHP_INT_MAX) {
                 $variables['required_amount'] = $min_required_amount;
-
                 $variables['source_id'] = $rule['source_id'];
                 $variables['source_type'] = $rule['source_type'];
                 $variables['source_name'] = $rule['source_name'];
-
-                if ($variables['cart_empty']) {
-                    $variables['needed_amount'] = $min_required_amount;
-                } else {
-                    $variables['needed_amount'] = $min_required_amount - $cart['subtotal'];
-                }
             }
         }
     }
@@ -329,21 +320,24 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
                 }
                 if ($has_free_shipping_rate && $min_required_amount < PHP_INT_MAX) {
                     $variables['required_amount'] = $min_required_amount;
-
                     $variables['source_id'] = $shipping['shipping_id'];
                     $variables['source_type'] = 'shipping';
                     $variables['source_name'] = $shipping['shipping'];
-
-                    if ($variables['cart_empty']) {
-                        $variables['needed_amount'] = $min_required_amount;
-                    } else {
-                        $variables['needed_amount'] = $min_required_amount - $cart['subtotal'];
-                    }
                 }
             }
 
         }
     }
+
+    if ($product['free_shipping'] === 'Y') {
+        $has_free_shipping_rate = true;
+        $min_required_amount = $product['price'];
+        $variables['required_amount'] = fn_format_price($product['price']);
+        $variables['source_id'] = $product['product_id'];
+        $variables['source_type'] = 'individual_product_free_shipping';
+        $variables['source_name'] = $product['product'];
+    }
+
     if (!$has_free_shipping_rate) {
         $cache[$hash] = false;
         return false;
@@ -353,7 +347,6 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
         $cache[$hash] = false;
         return false;
     }
-    $variables['min_required_amount'] = $min_required_amount;
 
     // display_product_details_text_ineligible_empty_cart // Add products
     // display_product_details_text_eligible // You get free delivery
@@ -361,6 +354,12 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
     // display_product_details_text_ineligible_add_more // Add more products
 
     $currentCartAmount = $cart['subtotal'];
+    $variables['min_required_amount'] = $min_required_amount;
+    if ($variables['cart_empty']) {
+        $variables['needed_amount'] = $min_required_amount;
+    } else {
+        $variables['needed_amount'] = $min_required_amount - $currentCartAmount;
+    }
 
     if ($variables['cart_empty']) {
         // this is the potential cart total (if the customer would've add current product)
@@ -369,6 +368,8 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
         } else {
             $text = $settings['display_product_details_text_ineligible_empty_cart'];
         }
+    } else if (!$variables['current_product_in_cart'] && $variables['source_type'] == 'individual_product_free_shipping') {
+        $text = $settings['display_product_details_text_eligible_individual_item'];
     } else if ($currentCartAmount >= $min_required_amount) {
         $text = $settings['display_product_details_text_eligible'];
     } else if (!$variables['current_product_in_cart'] && $product['price'] + $currentCartAmount >= $min_required_amount) {
@@ -400,8 +401,22 @@ function fn_free_shipping_incentive_format_text($settings, $product)
     }
 
     $text = $variables['text'];
+
+    static $currency = null;
+    static $trailingZeros = null;
+    if ($currency === null) {
+        $currencies = Registry::get('currencies');
+        $currency = $currencies[CART_PRIMARY_CURRENCY];
+        $decimals = isset($currency['display_decimals']) ? $currency['display_decimals'] : $currency['decimals'];
+        $trailingZeros = $currency['decimals_separator'] . str_repeat('0', $decimals);
+    }
+
     foreach ($variables as $variable => $value) {
         $search = '[' . $variable . ']';
+        if (in_array($variable, array('cart_total', 'required_amount', 'needed_amount'))) {
+            $value = smarty_modifier_format_price($value, $currency);
+            $value = str_replace($trailingZeros, '', $value);
+        }
         $text = str_replace($search, $value, $text);
     }
 
