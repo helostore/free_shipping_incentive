@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <addon scheme="3.0">
     <id>free_shipping_incentive</id>
-    <version>1.0.14</version>
+    <version>1.0.15</version>
     <priority>4294967294</priority>
     <position>0</position>
     <status>active</status>

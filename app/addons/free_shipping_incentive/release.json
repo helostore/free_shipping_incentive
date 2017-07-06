@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.0.15",
+        "releaseDate": "2017-07-06 01:03:34",
+        "releaseTimestamp": "1499346214",
+        "hash": "d990b1cb2d71847b41d05b20e1fcceb900901404",
+        "commits": [
+            "[2017-07-06] Bumped version to 1.0.15",
+            "[2017-07-06]\tAdd support for Free Shipping option in individual products"
+        ]
+    },
+    {
         "version": "1.0.14",
         "releaseDate": "2017-07-06 12:01:38",
         "releaseTimestamp": "1499342498",
@@ -28,17 +38,6 @@
         "commits": [
             "[2017-07-06] Bumped version to 1.0.12",
             "[2017-07-06]\tAdd support for promotions (order's subtotal conditions)"
-        ]
-    },
-    {
-        "version": "1.0.11",
-        "releaseDate": "2017-02-18 02:39:31",
-        "releaseTimestamp": "1487385571",
-        "hash": "0195dfad2dca078c1268ff8251adfc2005be39e3",
-        "commits": [
-            "[2017-02-18] Bumped version to 1.0.11",
-            "[2017-02-18] Bumped version to 1.0.11",
-            "[2017-02-18] Bugfix: fixed incompatibility with certain themes"
         ]
     }
 ]
