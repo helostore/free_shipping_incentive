@@ -361,22 +361,35 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
         $variables['needed_amount'] = $min_required_amount - $currentCartAmount;
     }
 
-    if ($variables['cart_empty']) {
-        // this is the potential cart total (if the customer would've add current product)
-        if ($currentCartAmount >= $min_required_amount) {
+
+    if ($variables['source_type'] == 'individual_product_free_shipping') {
+        if ($variables['cart_empty']) {
+            $text = $settings['display_product_details_text_eligible_individual_item'];
+        } else {
+            if ($variables['current_product_in_cart']) {
+                $text = $settings['display_product_details_text_eligible'];
+            } else {
+                $text = $settings['display_product_details_text_eligible_individual_item'];
+            }
+        }
+    } else {
+        if ($variables['cart_empty']) {
+            // this is the potential cart total (if the customer would've add current product)
+            if ($currentCartAmount >= $min_required_amount) {
+                $text = $settings['display_product_details_text_ineligible_add_this'];
+            } else {
+                $text = $settings['display_product_details_text_ineligible_empty_cart'];
+            }
+        } else if ($currentCartAmount >= $min_required_amount) {
+            $text = $settings['display_product_details_text_eligible'];
+        } else if (!$variables['current_product_in_cart'] && $product['price'] + $currentCartAmount >= $min_required_amount) {
             $text = $settings['display_product_details_text_ineligible_add_this'];
         } else {
-            $text = $settings['display_product_details_text_ineligible_empty_cart'];
+            $text = $settings['display_product_details_text_ineligible_add_more'];
         }
-    } else if (!$variables['current_product_in_cart'] && $variables['source_type'] == 'individual_product_free_shipping') {
-        $text = $settings['display_product_details_text_eligible_individual_item'];
-    } else if ($currentCartAmount >= $min_required_amount) {
-        $text = $settings['display_product_details_text_eligible'];
-    } else if (!$variables['current_product_in_cart'] && $product['price'] + $currentCartAmount >= $min_required_amount) {
-        $text = $settings['display_product_details_text_ineligible_add_this'];
-    } else {
-        $text = $settings['display_product_details_text_ineligible_add_more'];
     }
+
+
 
     $variables['text'] = $text;
     $cache[$hash] = $variables;
@@ -427,7 +440,7 @@ function fn_free_shipping_incentive_format_text($settings, $product)
  * @param $price
  * @param $currency
  * @param bool $is_secondary
- * 
+ *
  * @return string
  */
 function fn_free_shipping_incentive_format_price($price, $currency, $is_secondary = false)
