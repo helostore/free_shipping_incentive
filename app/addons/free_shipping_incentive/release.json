@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.0.17",
+        "releaseDate": "2017-07-06 01:27:02",
+        "releaseTimestamp": "1499347622",
+        "hash": "ebab7537f5704931311e28baa2cc07d8f0a3ff9f",
+        "commits": [
+            "[2017-07-06] Bumped version to 1.0.17",
+            "[2017-07-06]\tMinor fix when offering free shipping on individual products"
+        ]
+    },
+    {
         "version": "1.0.16",
         "releaseDate": "2017-07-06 01:17:19",
         "releaseTimestamp": "1499347039",
@@ -27,17 +37,6 @@
         "commits": [
             "[2017-07-06] Bumped version to 1.0.14",
             "[2017-07-06]\tFix caching issue when text wasn't refreshing to unlogged\/guest visitors"
-        ]
-    },
-    {
-        "version": "1.0.13",
-        "releaseDate": "2017-07-06 07:04:07",
-        "releaseTimestamp": "1499324647",
-        "hash": "17b1736de401c3b23fd080d57c8801e2c68bbd91",
-        "commits": [
-            "[2017-07-06] Bumped version to 1.0.13",
-            "[2017-07-06]\tRename addon name from free_shipping_notice to free_shipping_incentive",
-            "[2017-07-06]\tMerge branch 'feature\/promotions'"
         ]
     }
 ]
