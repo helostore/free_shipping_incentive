@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.0.12",
+        "releaseDate": "2017-07-06 06:38:07",
+        "releaseTimestamp": "1499323087",
+        "hash": "276441a36b763413fc9a7a81373677d2cb4a5498",
+        "commits": [
+            "[2017-07-06] Bumped version to 1.0.12",
+            "[2017-07-06]\tAdd support for promotions (order's subtotal conditions)"
+        ]
+    },
+    {
         "version": "1.0.11",
         "releaseDate": "2017-02-18 02:39:31",
         "releaseTimestamp": "1487385571",
