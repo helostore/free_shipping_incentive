@@ -406,7 +406,7 @@ function fn_free_shipping_incentive_format_text($settings, $product)
     static $trailingZeros = null;
     if ($currency === null) {
         $currencies = Registry::get('currencies');
-        $currency = $currencies[CART_PRIMARY_CURRENCY];
+        $currency = $currencies[CART_SECONDARY_CURRENCY];
         $decimals = isset($currency['display_decimals']) ? $currency['display_decimals'] : $currency['decimals'];
         $trailingZeros = $currency['decimals_separator'] . str_repeat('0', $decimals);
     }
@@ -414,7 +414,7 @@ function fn_free_shipping_incentive_format_text($settings, $product)
     foreach ($variables as $variable => $value) {
         $search = '[' . $variable . ']';
         if (in_array($variable, array('cart_total', 'required_amount', 'needed_amount'))) {
-            $value = smarty_modifier_format_price($value, $currency);
+            $value = fn_free_shipping_incentive_format_price($value, $currency);
             $value = str_replace($trailingZeros, '', $value);
         }
         $text = str_replace($search, $value, $text);
@@ -423,6 +423,37 @@ function fn_free_shipping_incentive_format_text($settings, $product)
     return $text;
 }
 
+/**
+ * @param $price
+ * @param $currency
+ * @param bool $is_secondary
+ * 
+ * @return string
+ */
+function fn_free_shipping_incentive_format_price($price, $currency, $is_secondary = false)
+{
+    $number_type = 'F';
+    $value = fn_format_rate_value(
+        $price,
+        $number_type,
+        $currency['decimals'],
+        $currency['decimals_separator'],
+        $currency['thousands_separator'],
+        $currency['coefficient']
+    );
+
+    $data = array (
+        $value,
+    );
+
+    if ($currency['after'] == 'Y') {
+        array_push($data, '&nbsp;' . $currency['symbol']);
+    } else {
+        array_unshift($data, $currency['symbol']);
+    }
+
+    return implode('', $data);
+}
 /**
  * @return string
  */
