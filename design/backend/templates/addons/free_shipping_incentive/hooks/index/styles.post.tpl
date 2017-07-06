@@ -1,0 +1,1 @@
+{style src="addons/free_shipping_incentive/backend.less"}

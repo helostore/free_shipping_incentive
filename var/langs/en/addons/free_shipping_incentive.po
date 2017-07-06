@@ -1,0 +1,34 @@
+msgid ""
+msgstr "Project-Id-Version: tygh"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language-Team: English\n"
+"Language: en_US"
+
+msgctxt "Addons::name::free_shipping_incentive"
+msgid "Free Shipping Incentive"
+msgstr "Free Shipping Incentive"
+
+msgctxt "Addons::description::free_shipping_incentive"
+msgid "Drive up your conversion rates with 'Free Shipping' messages on your product pages. Moreover, this addon can inform the client how much more to buy to benefit from free shipping. | Created with love by HELOstore.com"
+msgstr "Drive up your conversion rates with 'Free Shipping' messages on your product pages. Moreover, this addon can inform the client how much more to buy to benefit from free shipping. | Created with love by HELOstore.com"
+
+
+msgctxt "SettingsOptions::free_shipping_incentive::email"
+msgid "HELOstore email"
+msgstr "HELOstore email"
+
+msgctxt "SettingsOptions::free_shipping_incentive::password"
+msgid "HELOstore password"
+msgstr "HELOstore password"
+
+msgctxt "SettingsOptions::free_shipping_incentive::license"
+msgid "License key"
+msgstr "License key"
+
+msgctxt "Languages::my_sidekick_is_not_present"
+msgid "This add-on has a single requirement: Sidekick add-on. Please install and activate Sidekick first."
+msgstr "This add-on has a single requirement: Sidekick add-on. Please install and activate Sidekick first."
+
+msgctxt "Languages::fsn.variables"
+msgid "Variables that can be use in messages"
+msgstr "Variables that can be use in messages"

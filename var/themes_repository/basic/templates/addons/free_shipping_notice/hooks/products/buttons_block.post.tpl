@@ -1,1 +1,0 @@
-{include file="addons/free_shipping_notice/notices.tpl" hook="products:buttons_block" position="post"}
