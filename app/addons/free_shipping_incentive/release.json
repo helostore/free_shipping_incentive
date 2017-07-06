@@ -1,5 +1,16 @@
 [
     {
+        "version": "1.0.13",
+        "releaseDate": "2017-07-06 07:04:07",
+        "releaseTimestamp": "1499324647",
+        "hash": "17b1736de401c3b23fd080d57c8801e2c68bbd91",
+        "commits": [
+            "[2017-07-06] Bumped version to 1.0.13",
+            "[2017-07-06]\tRename addon name from free_shipping_notice to free_shipping_incentive",
+            "[2017-07-06]\tMerge branch 'feature\/promotions'"
+        ]
+    },
+    {
         "version": "1.0.12",
         "releaseDate": "2017-07-06 06:38:07",
         "releaseTimestamp": "1499323087",
