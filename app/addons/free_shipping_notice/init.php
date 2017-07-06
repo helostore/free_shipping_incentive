@@ -14,3 +14,8 @@
 
 if (!defined('BOOTSTRAP')) { die('Access denied'); }
 
+require_once __DIR__ . '/vendor/autoload.php';
+
+if (AREA == 'C') {
+    fn_register_hooks('get_promotions');
+}

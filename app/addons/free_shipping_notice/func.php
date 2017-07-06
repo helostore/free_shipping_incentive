@@ -4,6 +4,102 @@ use Tygh\Http;
 use Tygh\Registry;
 use Tygh\Shippings\Shippings;
 
+/**
+ * Hooks
+ */
+
+/**
+ * Only find promotions offering free shipping as bonuses.
+ *
+ * @param $params
+ * @param $fields
+ * @param $sortings
+ * @param $condition
+ * @param $join
+ */
+function fn_free_shipping_notice_get_promotions($params, $fields, $sortings, &$condition, $join)
+{
+    if (!empty($params['free_shipping_only'])) {
+        $condition .= db_quote(' AND bonuses LIKE "%\"free_shipping\"%"');
+    }
+}
+
+/**
+ * Functions
+ */
+
+/**
+ * @param array $auth
+ * @param array $cart Copy of SESSION's cart.
+ *
+ * @return array
+ */
+function fn_free_shipping_notice_calculate_promotions($auth, $cart)
+{
+    $promotions = \HeloStore\FreeShippingIncentive\Promotion\PromotionRepository::find();
+    $cart_products = $cart['products'];
+    $currentAmount = $cart['subtotal'];
+    $cart['subtotal'] = PHP_INT_MAX;
+    $matchedConditions = array();
+    foreach ($promotions as $promotion) {
+
+        if (empty($promotion['conditions'])) {
+            continue;
+        }
+        list($tmp_result, $nested_checked_conditions) = fn_check_promotion_condition_groups_recursive(
+            $promotion['conditions'],
+            $promotion,
+            $cart,
+            $auth,
+            $cart_products
+        );
+        if ($tmp_result != true) {
+            continue;
+        }
+        if (!isset($nested_checked_conditions['subtotal'])) {
+            continue;
+        }
+
+        $rules = $nested_checked_conditions['subtotal'];
+        foreach ($rules as $rule) {
+            if (empty($rule['condition'])) {
+                continue;
+            }
+            if (empty($rule['condition']['value'])) {
+                continue;
+            }
+            if (in_array($rule['condition']['operator'], array('eq', 'gte', 'gt'))) {
+                $requiredAmount = $rule['condition']['value'];
+
+                if ($rule['condition']['operator'] == 'gt') {
+                    $roundedRequiredAmount = ceil($rule['condition']['value']);
+                    if ($roundedRequiredAmount > $rule['condition']['value']) {
+                        $requiredAmount = $roundedRequiredAmount;
+                    } else {
+                        $requiredAmount = $rule['condition']['value'] + 1;
+                    }
+                    $requiredAmount = intval($requiredAmount);
+                }
+                $rule['condition']['required_amount'] = $requiredAmount;
+                $rule['condition']['needed_amount'] = $requiredAmount - $currentAmount;
+                $rule['condition']['source_type'] = 'promotion';
+                $rule['condition']['source_name'] = $promotion['name'];
+                $rule['condition']['source_id'] = $promotion['promotion_id'];
+                $matchedConditions[$requiredAmount . ""] = $rule['condition'];
+            }
+        }
+    }
+    ksort($matchedConditions);
+
+    return $matchedConditions;
+}
+
+/**
+ * @param $auth
+ * @param $cart
+ *
+ * @return array
+ */
 function fn_free_shipping_notice_calculate_cart_shipping($auth, &$cart)
 {
     // Code block borrowed from CS-Cart's core fn_calculate_cart_content() function
@@ -68,6 +164,13 @@ function fn_free_shipping_notice_calculate_cart_shipping($auth, &$cart)
     return $shippings;
 }
 
+/**
+ * @param $hook
+ * @param $position
+ * @param $product
+ *
+ * @return bool|mixed
+ */
 function fn_free_shipping_notice_display($hook, $position, $product)
 {
     $settings = Registry::get('addons.free_shipping_notice');
@@ -104,10 +207,17 @@ function fn_free_shipping_notice_display($hook, $position, $product)
         }
     }
 
-
     return false;
 }
 
+/**
+ * @param $settings
+ * @param $product
+ * @param $cart
+ * @param $auth
+ *
+ * @return array|bool
+ */
 function fn_free_shipping_notice_get_variables($settings, $product, $cart, $auth)
 {
     static $cache = array();
@@ -161,6 +271,8 @@ function fn_free_shipping_notice_get_variables($settings, $product, $cart, $auth
         fn_calculate_cart_content($cart, $auth, 'S', true, 'F', true);
     }
 
+    $promotionsConditions = fn_free_shipping_notice_calculate_promotions($auth, $cart);
+
     // Code block borrowed from CS-Cart's core fn_calculate_cart_content() function
     $shippings = fn_free_shipping_notice_calculate_cart_shipping($auth, $cart);
     // at this point, an empty $cart would now contain the current product which was added locally by the shipping estimation function
@@ -168,6 +280,34 @@ function fn_free_shipping_notice_get_variables($settings, $product, $cart, $auth
     $has_free_shipping_rate = false;
     $min_required_amount = PHP_INT_MAX;
 
+    // Check lowest Free-Shipping-Threshold in promotions list.
+    if (!empty($promotionsConditions)) {
+
+        foreach ($promotionsConditions as $rule) {
+            $requiredAmount = $rule['required_amount'];
+
+            if ($min_required_amount > $requiredAmount) {
+                $min_required_amount = $requiredAmount;
+                $has_free_shipping_rate = true;
+            }
+
+            if ($has_free_shipping_rate && $min_required_amount < PHP_INT_MAX) {
+                $variables['required_amount'] = $min_required_amount;
+
+                $variables['source_id'] = $rule['source_id'];
+                $variables['source_type'] = $rule['source_type'];
+                $variables['source_name'] = $rule['source_name'];
+
+                if ($variables['cart_empty']) {
+                    $variables['needed_amount'] = $min_required_amount;
+                } else {
+                    $variables['needed_amount'] = $min_required_amount - $cart['subtotal'];
+                }
+            }
+        }
+    }
+
+    // Check lowest Free-Shipping-Threshold in shipping list.
     if (!empty($shippings)) {
         foreach ($shippings as $shipping) {
             if (!empty($cart['chosen_shipping']) && !in_array($shipping['shipping_id'], $cart['chosen_shipping'])) {
@@ -189,6 +329,11 @@ function fn_free_shipping_notice_get_variables($settings, $product, $cart, $auth
                 }
                 if ($has_free_shipping_rate && $min_required_amount < PHP_INT_MAX) {
                     $variables['required_amount'] = $min_required_amount;
+
+                    $variables['source_id'] = $shipping['shipping_id'];
+                    $variables['source_type'] = 'shipping';
+                    $variables['source_name'] = $shipping['shipping'];
+
                     if ($variables['cart_empty']) {
                         $variables['needed_amount'] = $min_required_amount;
                     } else {
@@ -215,16 +360,18 @@ function fn_free_shipping_notice_get_variables($settings, $product, $cart, $auth
     // display_product_details_text_ineligible_add_this // Add this product
     // display_product_details_text_ineligible_add_more // Add more products
 
+    $currentCartAmount = $cart['subtotal'];
+
     if ($variables['cart_empty']) {
         // this is the potential cart total (if the customer would've add current product)
-        if ($cart['total'] >= $min_required_amount) {
+        if ($currentCartAmount >= $min_required_amount) {
             $text = $settings['display_product_details_text_ineligible_add_this'];
         } else {
             $text = $settings['display_product_details_text_ineligible_empty_cart'];
         }
-    } else if ($cart['total'] >= $min_required_amount) {
+    } else if ($currentCartAmount >= $min_required_amount) {
         $text = $settings['display_product_details_text_eligible'];
-    } else if (!$variables['current_product_in_cart'] && $product['price'] + $cart['total'] >= $min_required_amount) {
+    } else if (!$variables['current_product_in_cart'] && $product['price'] + $currentCartAmount >= $min_required_amount) {
         $text = $settings['display_product_details_text_ineligible_add_this'];
     } else {
         $text = $settings['display_product_details_text_ineligible_add_more'];
@@ -234,9 +381,14 @@ function fn_free_shipping_notice_get_variables($settings, $product, $cart, $auth
     $cache[$hash] = $variables;
 
     return $variables;
-
 }
 
+/**
+ * @param $settings
+ * @param $product
+ *
+ * @return bool|mixed
+ */
 function fn_free_shipping_notice_format_text($settings, $product)
 {
     $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
@@ -256,6 +408,9 @@ function fn_free_shipping_notice_format_text($settings, $product)
     return $text;
 }
 
+/**
+ * @return string
+ */
 function fn_free_shipping_notice_display_product_details_variables_info()
 {
     $html = '
@@ -272,6 +427,10 @@ function fn_free_shipping_notice_display_product_details_variables_info()
 
     return $html;
 }
+
+/**
+ * @return string
+ */
 function fn_free_shipping_notice_display_product_details_hooks_info()
 {
     $file = 'fsn-visual-guide.png';
@@ -316,12 +475,20 @@ function fn_free_shipping_notice_display_product_details_hooks_info()
 
     return '';
 }
+
+/**
+ * Uninstall.
+ */
 function fn_free_shipping_notice_uninstall()
 {
     if (class_exists('\HeloStore\ADLS\LicenseClient', true)) {
         \HeloStore\ADLS\LicenseClient::process(\HeloStore\ADLS\LicenseClient::CONTEXT_UNINSTALL);
     }
 }
+
+/**
+ * Install.
+ */
 function fn_free_shipping_notice_install()
 {
     if (class_exists('\HeloStore\ADLS\LicenseClient', true)) {
