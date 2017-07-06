@@ -1,7 +1,7 @@
 <?xml version="1.0"?>
 <addon scheme="3.0">
     <id>free_shipping_notice</id>
-    <version>1.0.11</version>
+    <version>1.0.12</version>
     <priority>4294967294</priority>
     <position>0</position>
     <status>active</status>
@@ -27,17 +27,17 @@
                     <item id="display_product_details_text_ineligible_empty_cart">
                         <type>textarea</type>
                         <name>If cart is empty</name>
-                        <default_value>FREE SHIPPING OVER [required_amount]&#x20AC;.&lt;br&gt;Add products worth &lt;b&gt;[needed_amount]&#x20AC;&lt;/b&gt; and get &lt;u&gt;free delivery&lt;/u&gt;.</default_value>
+                        <default_value>FREE SHIPPING OVER [required_amount]&#x20AC;. &lt;br&gt;Add products worth &lt;b&gt;[needed_amount]&#x20AC;&lt;/b&gt; and get &lt;u&gt;free delivery&lt;/u&gt;.</default_value>
                     </item>
                     <item id="display_product_details_text_ineligible_add_more">
                         <type>textarea</type>
                         <name>If cart total is below the free shipping threshold</name>
-                        <default_value>FREE SHIPPING OVER [required_amount].&lt;br&gt;Add more products worth &lt;b&gt;[needed_amount]&#x20AC;&lt;/b&gt; and get &lt;u&gt;free delivery&lt;/u&gt;.</default_value>
+                        <default_value>FREE SHIPPING OVER [required_amount]. &lt;br&gt;Add more products worth &lt;b&gt;[needed_amount]&#x20AC;&lt;/b&gt; and get &lt;u&gt;free delivery&lt;/u&gt;.</default_value>
                     </item>
                     <item id="display_product_details_text_ineligible_add_this">
                         <type>textarea</type>
                         <name>If cart total is below the free shipping threshold and adding current product would offer free shipping</name>
-                        <default_value>FREE SHIPPING OVER [required_amount]&#x20AC;.&lt;br&gt;Add this product to cart and get &lt;u&gt;free delivery&lt;/u&gt;.</default_value>
+                        <default_value>FREE SHIPPING OVER [required_amount]&#x20AC;. &lt;br&gt;Add this product to cart and get &lt;u&gt;free delivery&lt;/u&gt;.</default_value>
                     </item>
                     <item id="display_product_details_text_eligible">
                         <type>textarea</type>
