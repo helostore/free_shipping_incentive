@@ -268,7 +268,7 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
         );
         fn_add_product_to_cart($product_data, $cart, $auth);
         $cart['change_cart_products'] = true;
-        fn_calculate_cart_content($cart, $auth, 'S', true, 'F', true);
+        fn_calculate_cart_content($cart, $auth, 'S', true, 'F', false);
     }
 
     $promotionsConditions = fn_free_shipping_incentive_calculate_promotions($auth, $cart);
