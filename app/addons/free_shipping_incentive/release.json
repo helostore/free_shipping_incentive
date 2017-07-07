@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.0.18",
+        "releaseDate": "2017-07-07 08:02:38",
+        "releaseTimestamp": "1499414558",
+        "hash": "e497cbc74fb1c71bf5c770b50092705c6e5b2404",
+        "commits": [
+            "[2017-07-07] Bumped version to 1.0.18",
+            "[2017-07-07]\tFix issue where promotions notification would appear repeatedly"
+        ]
+    },
+    {
         "version": "1.0.17",
         "releaseDate": "2017-07-06 01:27:02",
         "releaseTimestamp": "1499347622",
@@ -27,16 +37,6 @@
         "commits": [
             "[2017-07-06] Bumped version to 1.0.15",
             "[2017-07-06]\tAdd support for Free Shipping option in individual products"
-        ]
-    },
-    {
-        "version": "1.0.14",
-        "releaseDate": "2017-07-06 12:01:38",
-        "releaseTimestamp": "1499342498",
-        "hash": "401e1c3be7ed7b656551c6c6bae2e80060e39036",
-        "commits": [
-            "[2017-07-06] Bumped version to 1.0.14",
-            "[2017-07-06]\tFix caching issue when text wasn't refreshing to unlogged\/guest visitors"
         ]
     }
 ]
