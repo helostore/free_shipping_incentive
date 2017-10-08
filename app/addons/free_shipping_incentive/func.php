@@ -41,11 +41,40 @@ function fn_free_shipping_incentive_calculate_promotions($auth, $cart)
     $currentAmount = $cart['subtotal'];
     $cart['subtotal'] = PHP_INT_MAX;
     $matchedConditions = array();
+
+    static $ignoredPromotionConditions = null;
+    if ($ignoredPromotionConditions === null) {
+        $ignoredPromotionConditions = array();
+        $settings = Registry::get('addons.free_shipping_incentive');
+        // Bug in CS-Cart when handling multiple checkboxes; this array should be empty when no checkbox is selected
+        if (isset($settings['ignored_promotion_conditions']['N'])) {
+            unset($settings['ignored_promotion_conditions']['N']);
+        }
+        if ( ! empty($settings['ignored_promotion_conditions'])) {
+            foreach ($settings['ignored_promotion_conditions'] as $condition => $value) {
+                if ($value === 'Y') {
+                    $ignoredPromotionConditions[] = $condition;
+                }
+            }
+        }
+    }
+
     foreach ($promotions as $promotion) {
 
         if (empty($promotion['conditions'])) {
             continue;
         }
+
+        if ( ! empty($ignoredPromotionConditions)) {
+            if ( ! empty($promotion['conditions']['conditions']) && $promotion['conditions']['set'] === 'all') {
+                foreach ($promotion['conditions']['conditions'] as $k => $condition) {
+                    if (in_array($condition['condition'], $ignoredPromotionConditions)) {
+                        unset($promotion['conditions']['conditions'][$k]);
+                    }
+                }
+            }
+        }
+
         list($tmp_result, $nested_checked_conditions) = fn_check_promotion_condition_groups_recursive(
             $promotion['conditions'],
             $promotion,
@@ -61,6 +90,7 @@ function fn_free_shipping_incentive_calculate_promotions($auth, $cart)
         }
 
         $rules = $nested_checked_conditions['subtotal'];
+
         foreach ($rules as $rule) {
             if (empty($rule['condition'])) {
                 continue;
@@ -284,7 +314,7 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
     if (!empty($promotionsConditions)) {
         foreach ($promotionsConditions as $rule) {
             $requiredAmount = $rule['required_amount'];
-            if ($min_required_amount > $requiredAmount) {
+            if (!empty($requiredAmount) && $min_required_amount > $requiredAmount) {
                 $min_required_amount = $requiredAmount;
                 $has_free_shipping_rate = true;
             }
@@ -312,12 +342,13 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
                 // consider only the cheapest shipping method
                 foreach ($shipping['rate_info']['rate_value']['C'] as $requiredAmount => $rate) {
                     if ($rate['value'] == 0) {
-                        if ($min_required_amount > $requiredAmount) {
+                        if (!empty($requiredAmount) && $min_required_amount > $requiredAmount) {
                             $min_required_amount = $requiredAmount;
                             $has_free_shipping_rate = true;
                         }
                     }
                 }
+
                 if ($has_free_shipping_rate && $min_required_amount < PHP_INT_MAX) {
                     $variables['required_amount'] = $min_required_amount;
                     $variables['source_id'] = $shipping['shipping_id'];
