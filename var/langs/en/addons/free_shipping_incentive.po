@@ -32,3 +32,15 @@ msgstr "This add-on has a single requirement: Sidekick add-on. Please install an
 msgctxt "Languages::fsn.variables"
 msgid "Variables that can be use in messages"
 msgstr "Variables that can be use in messages"
+
+msgctxt "SettingsOptions::free_shipping_incentive::ignored_promotion_conditions"
+msgid "Ignore promotion conditions"
+msgstr "Ignore promotion conditions"
+
+msgctxt "SettingsTooltips::free_shipping_incentive::ignored_promotion_conditions"
+msgid "In order to display the incentive messages to unregistered visitors (guests), some conditions may have to be overlooked by our add-on's algorithms. Note: this will not affect the default behaviour of CS-Cart."
+msgstr "In order to display the incentive messages to unregistered visitors (guests), some conditions may have to be overlooked by our add-on's algorithms. Note: this will not affect the default behaviour of CS-Cart."
+
+msgctxt "SettingsVariants::free_shipping_incentive::ignored_promotion_conditions::country"
+msgid "Customer country (shipping)"
+msgstr "Customer country (shipping)"

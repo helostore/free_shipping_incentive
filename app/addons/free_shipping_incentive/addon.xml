@@ -16,6 +16,14 @@
                         <type>checkbox</type>
                         <name>Enable</name>
                     </item>
+                    <item id="ignored_promotion_conditions">
+                        <type>multiple checkboxes</type>
+                        <name>Ignore promotion conditions</name>
+                        <variants>
+                            <item id="country">country</item>
+                        </variants>
+                        <default_value></default_value>
+                    </item>
                     <item id="header">
                         <type>header</type>
                         <name>Text to display</name>
