@@ -1,5 +1,16 @@
 [
     {
+        "version": "1.0.19",
+        "releaseDate": "2017-10-08 10:50:35",
+        "releaseTimestamp": "1507459835",
+        "hash": "8dc5d2b82517ae5e1700c8705034dea4367bc156",
+        "commits": [
+            "[2017-10-08] Bumped version to 1.0.19",
+            "[2017-10-08]\tMerge branch 'feature\/promotion\/ignore-country-condition'",
+            "[2017-10-08]\tImprove support for promotions: allow the ability to ignore certain promotion conditions when displaying incentive messages to unregistered visitors"
+        ]
+    },
+    {
         "version": "1.0.18",
         "releaseDate": "2017-07-07 08:02:38",
         "releaseTimestamp": "1499414558",
@@ -27,16 +38,6 @@
         "commits": [
             "[2017-07-06] Bumped version to 1.0.16",
             "[2017-07-06]\tMinor fix with price currency formatting"
-        ]
-    },
-    {
-        "version": "1.0.15",
-        "releaseDate": "2017-07-06 01:03:34",
-        "releaseTimestamp": "1499346214",
-        "hash": "d990b1cb2d71847b41d05b20e1fcceb900901404",
-        "commits": [
-            "[2017-07-06] Bumped version to 1.0.15",
-            "[2017-07-06]\tAdd support for Free Shipping option in individual products"
         ]
     }
 ]
