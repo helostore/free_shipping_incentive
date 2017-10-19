@@ -85,6 +85,9 @@
                             <item id="products:qty">
                                 <name>products:qty</name>
                             </item>
+                            <item id="products:notification_items">
+                                <name>products:notification_items</name>
+                            </item>
                         </variants>
                         <default_value>products:add_to_cart=Y</default_value>
                     </item>

@@ -224,17 +224,21 @@ function fn_free_shipping_incentive_display($hook, $position, $product)
             }
         }
     }
+    $is_add_to_cart_notification = ($controller == 'checkout' && $mode == 'add');
 
-    if ($settings['display_product_details'] == 'Y' && $is_main_product && $is_product_page) {
-        $standard_hook_enabled = (isset($settings['display_product_details_hooks'][$hook]) && $settings['display_product_details_hooks'][$hook] == 'Y');
-        $custom_hook_enabled = (isset($settings['display_product_details_custom_hooks']) && $settings['display_product_details_custom_hooks'] == $hook);
-        $is_pre = ($position == 'pre' && $settings['display_product_details_position'] == 'before');
-        $is_post = ($position == 'post' && $settings['display_product_details_position'] == 'after');
-        if ($standard_hook_enabled || $custom_hook_enabled) {
-            if ($is_pre || $is_post) {
-                return fn_free_shipping_incentive_format_text($settings, $product);
+    if ($settings['display_product_details'] == 'Y') {
+        if ($is_add_to_cart_notification || ($is_main_product && $is_product_page)) {
+            $standard_hook_enabled = (isset($settings['display_product_details_hooks'][$hook]) && $settings['display_product_details_hooks'][$hook] == 'Y');
+            $custom_hook_enabled = (isset($settings['display_product_details_custom_hooks']) && $settings['display_product_details_custom_hooks'] == $hook);
+            $is_pre = ($position == 'pre' && $settings['display_product_details_position'] == 'before');
+            $is_post = ($position == 'post' && $settings['display_product_details_position'] == 'after');
+            if ($standard_hook_enabled || $custom_hook_enabled) {
+                if ($is_pre || $is_post) {
+                    return fn_free_shipping_incentive_format_text($settings, $product);
+                }
             }
         }
+
     }
 
     return false;
