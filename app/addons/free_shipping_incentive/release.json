@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.0.21",
+        "releaseDate": "2017-10-20 01:31:15",
+        "releaseTimestamp": "1508506275",
+        "hash": "c5c81dc876fe1490ef174c593b36072d52d5016a",
+        "commits": [
+            "[2017-10-20] Bumped version to 1.0.21",
+            "[2017-10-20]\tMinor fix with responsive templates"
+        ]
+    },
+    {
         "version": "1.0.20",
         "releaseDate": "2017-10-19 11:11:15",
         "releaseTimestamp": "1508411475",
@@ -28,16 +38,6 @@
         "commits": [
             "[2017-07-07] Bumped version to 1.0.18",
             "[2017-07-07]\tFix issue where promotions notification would appear repeatedly"
-        ]
-    },
-    {
-        "version": "1.0.17",
-        "releaseDate": "2017-07-06 01:27:02",
-        "releaseTimestamp": "1499347622",
-        "hash": "ebab7537f5704931311e28baa2cc07d8f0a3ff9f",
-        "commits": [
-            "[2017-07-06] Bumped version to 1.0.17",
-            "[2017-07-06]\tMinor fix when offering free shipping on individual products"
         ]
     }
 ]
