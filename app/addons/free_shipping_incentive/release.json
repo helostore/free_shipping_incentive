@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.0.23",
+        "releaseDate": "2017-10-23 11:17:16",
+        "releaseTimestamp": "1508757436",
+        "hash": "8e73111df272d970ea11671e54e70ebedb8d7165",
+        "commits": [
+            "[2017-10-23] Bumped version to 1.0.23",
+            "[2017-10-23]\tMinor fix in products with Free Shipping option"
+        ]
+    },
+    {
         "version": "1.0.22",
         "releaseDate": "2017-10-23 10:11:37",
         "releaseTimestamp": "1508753497",
@@ -27,17 +37,6 @@
         "commits": [
             "[2017-10-19] Bumped version to 1.0.20",
             "[2017-10-19]\tIncentivizing messages can now be displayed in 'Product added to cart' notifications"
-        ]
-    },
-    {
-        "version": "1.0.19",
-        "releaseDate": "2017-10-08 10:50:35",
-        "releaseTimestamp": "1507459835",
-        "hash": "8dc5d2b82517ae5e1700c8705034dea4367bc156",
-        "commits": [
-            "[2017-10-08] Bumped version to 1.0.19",
-            "[2017-10-08]\tMerge branch 'feature\/promotion\/ignore-country-condition'",
-            "[2017-10-08]\tImprove support for promotions: allow the ability to ignore certain promotion conditions when displaying incentive messages to unregistered visitors"
         ]
     }
 ]
