@@ -1,1 +1,1 @@
-{include file="addons/free_shipping_incentive/notices.tpl" hook="products:notification_items" position="pre"}
+{include file="addons/free_shipping_incentive/notices.tpl" hook="products:notification_items" position="pre" product=null}

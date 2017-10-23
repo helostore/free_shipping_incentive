@@ -211,11 +211,25 @@ function fn_free_shipping_incentive_display($hook, $position, $product)
     $is_product_page = ($controller == 'products' && $mode == 'view');
     $is_main_product = true;
 
+    if ($hook == 'products:notification_items') {
+        $cartAddedProducts = Tygh::$app['view']->getTemplateVars('added_products');
+        if (!empty($_REQUEST['product_data']) && !empty($cartAddedProducts)) {
+
+            $requestProductId = key($_REQUEST['product_data']);
+            foreach ($cartAddedProducts as $cartAddedProduct) {
+                if ($cartAddedProduct['product_id'] == $requestProductId){
+                    $product = $cartAddedProduct;
+                    break;
+                }
+
+            }
+        }
+    }
+
     if (!empty($_REQUEST['product_id'])) {
         if ($_REQUEST['product_id'] != $product['product_id']) {
             $is_main_product = false;
         }
-
     } else if (!empty($view)) {
         $mainProduct = $view->getTemplateVars('product');
         if (!empty($mainProduct)) {
@@ -288,9 +302,9 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
     // if shipping calculation was already performed for this configuration (product,cart), return cached results
     $hash[] = $product['product_id'];
     $hash = md5(implode('|', $hash));
-    if (isset($cache[$hash])) {
-        return $cache[$hash];
-    }
+//    if (isset($cache[$hash])) {
+//        return $cache[$hash];
+//    }
 
     // if cart empty, add current product to local $cart to estimate if there's any free shipping available
     if (empty($cart['products'])) {
@@ -364,6 +378,10 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
         }
     }
 
+    // When adding to cart, the product data doesn't contain this property, so fetch it from database.
+    if (!isset($product['free_shipping'])) {
+        $product['free_shipping'] = db_get_field('SELECT free_shipping FROM ?:products WHERE product_id = ?i', $product['product_id']);
+    }
     if ($product['free_shipping'] === 'Y') {
         $has_free_shipping_rate = true;
         $min_required_amount = $product['price'];
