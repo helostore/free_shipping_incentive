@@ -283,6 +283,10 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
     // total = order final total (including shipping cost)
     // subtotal = order total without shipping cost
     $variables['cart_total'] = $cart['subtotal'];
+    $variables['free_shipping_product_in_cart'] = false;
+    $free_shipping_product_in_cart = null;
+    $has_free_shipping_rate = false;
+    $min_required_amount = PHP_INT_MAX;
 
     // check if current product is already in cart
     // $hash - create hash key to index result in cache
@@ -292,104 +296,120 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
             $hash[] = $id;
             $hash[] = $item['amount'];
             $hash[] = $item['price'];
+
+            if (!isset($item['free_shipping'])) {
+                $item['free_shipping'] = db_get_field('SELECT free_shipping FROM ?:products WHERE product_id = ?i', $item['product_id']);
+            }
+            if ($item['free_shipping'] == 'Y') {
+                $variables['free_shipping_product_in_cart'] = true;
+                $free_shipping_product_in_cart = $item;
+            }
             if ($item['product_id'] == $product['product_id']) {
                 $variables['current_product_in_cart'] = true;
-                break;
             }
         }
     }
-
-    // if shipping calculation was already performed for this configuration (product,cart), return cached results
     $hash[] = $product['product_id'];
     $hash = md5(implode('|', $hash));
-//    if (isset($cache[$hash])) {
-//        return $cache[$hash];
-//    }
 
-    // if cart empty, add current product to local $cart to estimate if there's any free shipping available
-    if (empty($cart['products'])) {
-        $product_data = array(
-            $product['product_id'] => array(
-                'amount' => 1,
-                'product_id' => $product['product_id'],
-            ),
-        );
-        fn_add_product_to_cart($product_data, $cart, $auth);
-        $cart['change_cart_products'] = true;
-        fn_calculate_cart_content($cart, $auth, 'S', true, 'F', false);
-    }
+    if ($variables['free_shipping_product_in_cart']) {
+        $has_free_shipping_rate = true;
+        $min_required_amount = $free_shipping_product_in_cart['price'];
+        $variables['required_amount'] = fn_format_price($free_shipping_product_in_cart['price']);
+        $variables['source_id'] = $free_shipping_product_in_cart['product_id'];
+        $variables['source_type'] = 'individual_product_free_shipping';
+        $variables['source_name'] = $free_shipping_product_in_cart['product'];
+    } else {
+        // if shipping calculation was already performed for this configuration (product,cart), return cached results
 
-    $promotionsConditions = fn_free_shipping_incentive_calculate_promotions($auth, $cart);
+        // if (isset($cache[$hash])) {
+        //     return $cache[$hash];
+        // }
 
-    // Code block borrowed from CS-Cart's core fn_calculate_cart_content() function
-    $shippings = fn_free_shipping_incentive_calculate_cart_shipping($auth, $cart);
-    // at this point, an empty $cart would now contain the current product which was added locally by the shipping estimation function
-
-    $has_free_shipping_rate = false;
-    $min_required_amount = PHP_INT_MAX;
-
-    // Check lowest Free-Shipping-Threshold in promotions list.
-    if (!empty($promotionsConditions)) {
-        foreach ($promotionsConditions as $rule) {
-            $requiredAmount = $rule['required_amount'];
-            if (!empty($requiredAmount) && $min_required_amount > $requiredAmount) {
-                $min_required_amount = $requiredAmount;
-                $has_free_shipping_rate = true;
-            }
-
-            if ($has_free_shipping_rate && $min_required_amount < PHP_INT_MAX) {
-                $variables['required_amount'] = $min_required_amount;
-                $variables['source_id'] = $rule['source_id'];
-                $variables['source_type'] = $rule['source_type'];
-                $variables['source_name'] = $rule['source_name'];
-            }
+        // if cart empty, add current product to local $cart to estimate if there's any free shipping available
+        if (empty($cart['products'])) {
+            $product_data = array(
+                $product['product_id'] => array(
+                    'amount' => 1,
+                    'product_id' => $product['product_id'],
+                ),
+            );
+            fn_add_product_to_cart($product_data, $cart, $auth);
+            $cart['change_cart_products'] = true;
+            fn_calculate_cart_content($cart, $auth, 'S', true, 'F', false);
         }
-    }
 
-    // Check lowest Free-Shipping-Threshold in shipping list.
-    if (!empty($shippings)) {
-        foreach ($shippings as $shipping) {
-            if (!empty($cart['chosen_shipping']) && !in_array($shipping['shipping_id'], $cart['chosen_shipping'])) {
-                continue;
-            }
-            if (empty($shipping['rate_info']) || empty($shipping['rate_info']['rate_value'])) {
-                continue;
-            }
+        $promotionsConditions = fn_free_shipping_incentive_calculate_promotions($auth, $cart);
 
-            if (!empty($shipping['rate_info']['rate_value']['C'])) {
-                // consider only the cheapest shipping method
-                foreach ($shipping['rate_info']['rate_value']['C'] as $requiredAmount => $rate) {
-                    if ($rate['value'] == 0) {
-                        if (!empty($requiredAmount) && $min_required_amount > $requiredAmount) {
-                            $min_required_amount = $requiredAmount;
-                            $has_free_shipping_rate = true;
-                        }
-                    }
+        // Code block borrowed from CS-Cart's core fn_calculate_cart_content() function
+        $shippings = fn_free_shipping_incentive_calculate_cart_shipping($auth, $cart);
+        // at this point, an empty $cart would now contain the current product which was added locally by the shipping estimation function
+
+        // Check lowest Free-Shipping-Threshold in promotions list.
+        if (!empty($promotionsConditions)) {
+            foreach ($promotionsConditions as $rule) {
+                $requiredAmount = $rule['required_amount'];
+                if (!empty($requiredAmount) && $min_required_amount > $requiredAmount) {
+                    $min_required_amount = $requiredAmount;
+                    $has_free_shipping_rate = true;
                 }
 
                 if ($has_free_shipping_rate && $min_required_amount < PHP_INT_MAX) {
                     $variables['required_amount'] = $min_required_amount;
-                    $variables['source_id'] = $shipping['shipping_id'];
-                    $variables['source_type'] = 'shipping';
-                    $variables['source_name'] = $shipping['shipping'];
+                    $variables['source_id'] = $rule['source_id'];
+                    $variables['source_type'] = $rule['source_type'];
+                    $variables['source_name'] = $rule['source_name'];
                 }
             }
+        }
 
+        // Check lowest Free-Shipping-Threshold in shipping list.
+        if (!empty($shippings)) {
+            foreach ($shippings as $shipping) {
+                if (!empty($cart['chosen_shipping']) && !in_array($shipping['shipping_id'], $cart['chosen_shipping'])) {
+                    continue;
+                }
+                if (empty($shipping['rate_info']) || empty($shipping['rate_info']['rate_value'])) {
+                    continue;
+                }
+
+                if (!empty($shipping['rate_info']['rate_value']['C'])) {
+                    // consider only the cheapest shipping method
+                    foreach ($shipping['rate_info']['rate_value']['C'] as $requiredAmount => $rate) {
+                        if ($rate['value'] == 0) {
+                            if (!empty($requiredAmount) && $min_required_amount > $requiredAmount) {
+                                $min_required_amount = $requiredAmount;
+                                $has_free_shipping_rate = true;
+                            }
+                        }
+                    }
+
+                    if ($has_free_shipping_rate && $min_required_amount < PHP_INT_MAX) {
+                        $variables['required_amount'] = $min_required_amount;
+                        $variables['source_id'] = $shipping['shipping_id'];
+                        $variables['source_type'] = 'shipping';
+                        $variables['source_name'] = $shipping['shipping'];
+                    }
+                }
+            }
+        }
+
+        // When adding to cart, the product data doesn't contain this property, so fetch it from database.
+        if (!isset($product['free_shipping'])) {
+            $product['free_shipping'] = db_get_field('SELECT free_shipping FROM ?:products WHERE product_id = ?i', $product['product_id']);
+        }
+
+        if ($product['free_shipping'] === 'Y') {
+            $has_free_shipping_rate = true;
+            $min_required_amount = $product['price'];
+            $variables['required_amount'] = fn_format_price($product['price']);
+            $variables['source_id'] = $product['product_id'];
+            $variables['source_type'] = 'individual_product_free_shipping';
+            $variables['source_name'] = $product['product'];
         }
     }
 
-    // When adding to cart, the product data doesn't contain this property, so fetch it from database.
-    if (!isset($product['free_shipping'])) {
-        $product['free_shipping'] = db_get_field('SELECT free_shipping FROM ?:products WHERE product_id = ?i', $product['product_id']);
-    }
-    if ($product['free_shipping'] === 'Y') {
-        $has_free_shipping_rate = true;
-        $min_required_amount = $product['price'];
-        $variables['required_amount'] = fn_format_price($product['price']);
-        $variables['source_id'] = $product['product_id'];
-        $variables['source_type'] = 'individual_product_free_shipping';
-        $variables['source_name'] = $product['product'];
-    }
+
 
     if (!$has_free_shipping_rate) {
         $cache[$hash] = false;
