@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.0.24",
+        "releaseDate": "2018-03-26 04:55:54",
+        "releaseTimestamp": "1522083354",
+        "hash": "29a47ddd42d6f56640c7a7488d2e6c61349d6dd1",
+        "commits": [
+            "[2018-03-26] Bumped version to 1.0.24",
+            "[2018-03-26]\tFixed issue: incentivizing messages disappeared when choosing a product option"
+        ]
+    },
+    {
         "version": "1.0.23",
         "releaseDate": "2017-10-23 11:17:16",
         "releaseTimestamp": "1508757436",
@@ -27,16 +37,6 @@
         "commits": [
             "[2017-10-20] Bumped version to 1.0.21",
             "[2017-10-20]\tMinor fix with responsive templates"
-        ]
-    },
-    {
-        "version": "1.0.20",
-        "releaseDate": "2017-10-19 11:11:15",
-        "releaseTimestamp": "1508411475",
-        "hash": "cb43e731be14a45a76a99100aaf880060633ac3b",
-        "commits": [
-            "[2017-10-19] Bumped version to 1.0.20",
-            "[2017-10-19]\tIncentivizing messages can now be displayed in 'Product added to cart' notifications"
         ]
     }
 ]
