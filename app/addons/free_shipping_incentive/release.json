@@ -1,5 +1,14 @@
 [
     {
+        "version": "1.0.26",
+        "releaseDate": "2018-03-26 05:39:56",
+        "releaseTimestamp": "1522085996",
+        "hash": "a20aa6a4b0cda8301d338748b4ddd9c701277441",
+        "commits": [
+            "[2018-03-26] Bumped version to 1.0.26"
+        ]
+    },
+    {
         "version": "1.0.25",
         "releaseDate": "2018-03-26 05:39:51",
         "releaseTimestamp": "1522085991",
@@ -26,16 +35,6 @@
         "hash": "8e73111df272d970ea11671e54e70ebedb8d7165",
         "commits": [
             "[2017-10-23] Bumped version to 1.0.23",
-            "[2017-10-23]\tMinor fix in products with Free Shipping option"
-        ]
-    },
-    {
-        "version": "1.0.22",
-        "releaseDate": "2017-10-23 10:11:37",
-        "releaseTimestamp": "1508753497",
-        "hash": "854dda6beecc5303a66c61dc7a17e3c01ffe261a",
-        "commits": [
-            "[2017-10-23] Bumped version to 1.0.22",
             "[2017-10-23]\tMinor fix in products with Free Shipping option"
         ]
     }

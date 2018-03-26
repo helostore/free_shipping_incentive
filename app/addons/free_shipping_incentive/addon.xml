@@ -1,12 +1,13 @@
 <?xml version="1.0"?>
 <addon scheme="3.0">
     <id>free_shipping_incentive</id>
-    <version>1.0.25</version>
+    <version>1.0.26</version>
     <priority>4294967294</priority>
     <position>0</position>
     <status>active</status>
     <auto_install>MULTIVENDOR,ULTIMATE</auto_install>
     <default_language>en</default_language>
+    <has_icon>Y</has_icon>
     <settings layout="separate" edition_type="ROOT,ULT:VENDOR">
         <sections>
             <section id="product_details">
