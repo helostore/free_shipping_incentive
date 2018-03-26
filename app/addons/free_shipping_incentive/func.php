@@ -208,7 +208,7 @@ function fn_free_shipping_incentive_display($hook, $position, $product)
     $mode = Registry::get('runtime.mode');
     $controller = Registry::get('runtime.controller');
 
-    $is_product_page = ($controller == 'products' && $mode == 'view');
+    $is_product_page = ($controller == 'products' && in_array($mode, array('view', 'options')));
     $is_main_product = true;
 
     if ($hook == 'products:notification_items') {
@@ -481,7 +481,6 @@ function fn_free_shipping_incentive_format_text($settings, $product)
     $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
     $auth = isset($_SESSION['auth']) ? $_SESSION['auth'] : array();
     $variables = fn_free_shipping_incentive_get_variables($settings, $product, $cart, $auth);
-
     if (empty($variables)) {
         return false;
     }
