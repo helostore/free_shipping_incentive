@@ -1,5 +1,15 @@
 [
     {
+        "version": "1.0.25",
+        "releaseDate": "2018-03-26 05:39:51",
+        "releaseTimestamp": "1522085991",
+        "hash": "82e85b4bd702d4b5f1f665fb88091a89db72406e",
+        "commits": [
+            "[2018-03-26] Bumped version to 1.0.25",
+            "[2018-03-26]\tAdd add-on icon"
+        ]
+    },
+    {
         "version": "1.0.24",
         "releaseDate": "2018-03-26 04:55:54",
         "releaseTimestamp": "1522083354",
@@ -27,16 +37,6 @@
         "commits": [
             "[2017-10-23] Bumped version to 1.0.22",
             "[2017-10-23]\tMinor fix in products with Free Shipping option"
-        ]
-    },
-    {
-        "version": "1.0.21",
-        "releaseDate": "2017-10-20 01:31:15",
-        "releaseTimestamp": "1508506275",
-        "hash": "c5c81dc876fe1490ef174c593b36072d52d5016a",
-        "commits": [
-            "[2017-10-20] Bumped version to 1.0.21",
-            "[2017-10-20]\tMinor fix with responsive templates"
         ]
     }
 ]
