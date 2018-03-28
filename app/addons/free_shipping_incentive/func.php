@@ -339,7 +339,10 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
             fn_calculate_cart_content($cart, $auth, 'S', true, 'F', false);
         }
 
-        $promotionsConditions = fn_free_shipping_incentive_calculate_promotions($auth, $cart);
+	    $promotionsConditions = array();
+	    if ( defined('PRODUCT_VERSION') && version_compare( PRODUCT_VERSION, '4.3', '>=' ) ) {
+		    $promotionsConditions = fn_free_shipping_incentive_calculate_promotions($auth, $cart);
+	    }
 
         // Code block borrowed from CS-Cart's core fn_calculate_cart_content() function
         $shippings = fn_free_shipping_incentive_calculate_cart_shipping($auth, $cart);
