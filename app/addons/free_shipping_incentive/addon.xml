@@ -36,17 +36,17 @@
                     <item id="display_product_details_text_ineligible_empty_cart">
                         <type>textarea</type>
                         <name>If cart is empty</name>
-                        <default_value><![CDATA[FREE SHIPPING OVER [required_amount]. <br>Add products worth <b>[needed_amount]</b> and get <u>free delivery</u>.]]></default_value>
+                        <default_value><![CDATA[FREE SHIPPING OVER [required_amount]. <br>Add products worth <b>[needed_amount]</b> and get <b>free delivery</b>.]]></default_value>
                     </item>
                     <item id="display_product_details_text_ineligible_add_more">
                         <type>textarea</type>
                         <name>If cart total is below the free shipping threshold</name>
-                        <default_value><![CDATA[FREE SHIPPING OVER [required_amount]. <br>Add more products worth <b>[needed_amount]</b> and get <u>free delivery</u>.]]></default_value>
+                        <default_value><![CDATA[FREE SHIPPING OVER [required_amount]. <br>Add more products worth <b>[needed_amount]</b> and get <b>free delivery</b>.]]></default_value>
                     </item>
                     <item id="display_product_details_text_ineligible_add_this">
                         <type>textarea</type>
                         <name>If cart total is below the free shipping threshold and adding current product would offer free shipping</name>
-                        <default_value><![CDATA[FREE SHIPPING OVER [required_amount]. <br>Add this product to cart and get <u>free delivery</u>.]]></default_value>
+                        <default_value><![CDATA[FREE SHIPPING OVER [required_amount]. <br>Add this product to cart and get <b>free delivery</b>.]]></default_value>
                     </item>
                     <item id="display_product_details_text_eligible">
                         <type>textarea</type>
@@ -151,6 +151,8 @@
             <min>4.2.1</min>
         </core_version>
     </compatibility>
+    <supplier>HELOstore</supplier>
+    <supplier_link>https://helostore.com/</supplier_link>
     <authors>
         <author>
             <name>HELOstore</name>
