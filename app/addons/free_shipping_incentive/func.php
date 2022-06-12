@@ -337,6 +337,56 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
             fn_add_product_to_cart($product_data, $cart, $auth);
             $cart['change_cart_products'] = true;
             fn_calculate_cart_content($cart, $auth, 'S', true, 'F', false);
+        } else {
+
+            $cartCompanyIds = array();
+            foreach ($cart['products'] as $cartProduct) {
+                if (!in_array($cartProduct['company_id'], $cartCompanyIds)) {
+                    $cartCompanyIds[] = $cartProduct['company_id'];
+                }
+            }
+            $currentCompanyId = (!empty($product) && !empty($product['company_id']) ? $product['company_id'] : 1);
+            $otherCompanyIdsInCart = array_diff($cartCompanyIds, array($currentCompanyId));
+            $hasProductsInCartFromCurrentVendor = in_array($currentCompanyId, $cartCompanyIds);
+            $hasProductsInCartFromOtherVendors = !empty($otherCompanyIdsInCart);
+
+            // @TODO differentiate between all these cases so that we can inform the customer about having products in cart from different Vendors, with different possibly shipping threshold
+
+            if ($hasProductsInCartFromOtherVendors && !$hasProductsInCartFromCurrentVendor) {
+                // Case 1. Cart contains products from other Vendors (with different shipping methods), but not from Current Vendor
+                //      => display threshold from Current Vendor's shipping methods (calculation should take into account only the current product)
+                $cart['products'] = array();
+                $product_data = array(
+                    $product['product_id'] => array(
+                        'amount' => 1,
+                        'product_id' => $product['product_id'],
+                    ),
+                );
+                fn_add_product_to_cart($product_data, $cart, $auth);
+                $cart['change_cart_products'] = true;
+                fn_calculate_cart_content($cart, $auth, 'S', true, 'F', false);
+                $variables['cart_total'] = 0;
+                $variables['cart_empty'] = true;
+
+            } else if ($hasProductsInCartFromOtherVendors && $hasProductsInCartFromCurrentVendor) {
+                // Case 2. Cart contains products from Other Vendors, but also from Current Vendor ($product's vendor)
+                //      => display threshold from Current Vendor's shipping methods (calculation should take into account both current product + other cart products from Current Vendor)
+
+                // Filter out cart products from Other Vendors, as they are irrelevant for this Current Vendor's shipping threshold
+                foreach ($cart['products'] as $cartProductId => $cartProduct) {
+                    if ($cartProduct['company_id'] !== $currentCompanyId) {
+                        fn_delete_cart_product($cart, $cartProductId);
+                    }
+                }
+                $cart['change_cart_products'] = true;
+                fn_calculate_cart_content($cart, $auth, 'S', true, 'F', false);
+
+            } else if (!$hasProductsInCartFromOtherVendors && $hasProductsInCartFromCurrentVendor) {
+                // Case 3. Cart contains other products from Current Vendor
+                //      => display threshold from Current Vendor's shipping methods (calculation should take into account both current product + all cart products)
+                // Nothing to do here, this is the default behavior.
+            }
+
         }
 
 	    $promotionsConditions = array();
