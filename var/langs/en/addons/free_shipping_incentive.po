@@ -44,3 +44,7 @@ msgstr "In order to display the incentive messages to unregistered visitors (gue
 msgctxt "SettingsVariants::free_shipping_incentive::ignored_promotion_conditions::country"
 msgid "Customer country (shipping)"
 msgstr "Customer country (shipping)"
+
+msgctxt "SettingsTooltips::free_shipping_incentive::display_product_details"
+msgid "Enables incentive messages"
+msgstr "Enables incentive messages"

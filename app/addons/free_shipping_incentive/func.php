@@ -311,6 +311,7 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
     }
     $hash[] = $product['product_id'];
     $hash = md5(implode('|', $hash));
+    $variables['vendor_name'] = $product['company_name'];
 
     if ($variables['free_shipping_product_in_cart']) {
         $has_free_shipping_rate = true;
@@ -605,6 +606,7 @@ function fn_free_shipping_incentive_display_product_details_variables_info()
                 <li><code>[cart_total]</code> - Current cart\'s total (excluding any shipping cost).</li>
                 <li><code>[required_amount]</code> - Cart total must equal or exceed this amount to benefit from free shipping. This amount is configured in the shipping methods rates.</li>
                 <li><code>[needed_amount]</code> - Difference amount needed to benefit from free shipping (ie. <code>[required_amount]</code> - <code>cart_total</code>).</li>
+                <li><code>[vendor_name]</code> - Vendor\'s name.</li>
             </ul>
             </div>
         </div>';
