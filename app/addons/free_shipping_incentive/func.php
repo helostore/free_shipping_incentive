@@ -208,8 +208,6 @@ function fn_free_shipping_incentive_display($hook, $position, $product, $returnA
     $mode = Registry::get('runtime.mode');
     $controller = Registry::get('runtime.controller');
 
-
-
     if ($hook == 'products:notification_items') {
         $cartAddedProducts = Tygh::$app['view']->getTemplateVars('added_products');
         if (!empty($_REQUEST['product_data']) && !empty($cartAddedProducts)) {
@@ -239,13 +237,13 @@ function fn_free_shipping_incentive_display($hook, $position, $product, $returnA
         }
     }
 
-    $isProductPage = ($controller == 'products' && in_array($mode, array('view', 'options')));
-    $isCategoryPage = ($controller == 'categories' && in_array($mode, array('view')));
+    $isProductPage = ($controller == 'products' && in_array($mode, array('view', 'options', 'quick_view', 'bestsellers', 'on_sale')));
+    $isCategoryPage = ($controller == 'categories' && $mode === 'view');
+    $isSearchPage = ($controller == 'products' && $mode === 'search');
     $isAddToCartNotification = ($controller == 'checkout' && $mode == 'add');
     $categoryPageHooks = ['products:product_labels'];
 
-//    aa(['$hook' => $hook, '$categoryPageHooks' => $categoryPageHooks]);
-    if ($isCategoryPage && in_array($hook, $categoryPageHooks)) {
+    if (($isCategoryPage || $isSearchPage) && in_array($hook, $categoryPageHooks)) {
         // todo ws@
         $isPre = ($position == 'pre' && $settings['display_product_details_position'] == 'before');
         $isPost = ($position == 'post' && $settings['display_product_details_position'] == 'after');
