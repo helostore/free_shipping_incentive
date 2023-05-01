@@ -59,6 +59,16 @@
                         <default_value><![CDATA[Add this product and get free delivery.]]></default_value>
                     </item>
 
+                    <item id="display_product_label_header">
+                        <type>header</type>
+                        <name>Incentive Badge</name>
+                    </item>
+                    <item id="display_product_label_text_eligible">
+                        <type>textarea</type>
+                        <name>Call-to-Action Badge Text</name>
+                        <default_value><![CDATA[FREE SHIPPING]]></default_value>
+                    </item>
+
 
                     <item id="header">
                         <type>header</type>
@@ -89,8 +99,11 @@
                             <item id="products:notification_items">
                                 <name>products:notification_items</name>
                             </item>
+                            <item id="products:product_labels">
+                                <name>products:product_labels</name>
+                            </item>
                         </variants>
-                        <default_value>products:add_to_cart=Y</default_value>
+                        <default_value>products:add_to_cart=Y,products:product_labels=Y</default_value>
                     </item>
                     <item id="display_product_details_custom_hooks">
                         <type>input</type>

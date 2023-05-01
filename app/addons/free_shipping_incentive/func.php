@@ -201,15 +201,14 @@ function fn_free_shipping_incentive_calculate_cart_shipping($auth, &$cart)
  *
  * @return bool|mixed
  */
-function fn_free_shipping_incentive_display($hook, $position, $product)
+function fn_free_shipping_incentive_display($hook, $position, $product, $returnAsObject = false)
 {
     $settings = Registry::get('addons.free_shipping_incentive');
     $view = Registry::get('runtime.view');
     $mode = Registry::get('runtime.mode');
     $controller = Registry::get('runtime.controller');
 
-    $is_product_page = ($controller == 'products' && in_array($mode, array('view', 'options')));
-    $is_main_product = true;
+
 
     if ($hook == 'products:notification_items') {
         $cartAddedProducts = Tygh::$app['view']->getTemplateVars('added_products');
@@ -226,34 +225,49 @@ function fn_free_shipping_incentive_display($hook, $position, $product)
         }
     }
 
+    $isMainProduct = true;
     if (!empty($_REQUEST['product_id'])) {
         if ($_REQUEST['product_id'] != $product['product_id']) {
-            $is_main_product = false;
+            $isMainProduct = false;
         }
     } else if (!empty($view)) {
         $mainProduct = $view->getTemplateVars('product');
         if (!empty($mainProduct)) {
             if ($mainProduct['product_id'] != $product['product_id']) {
-                $is_main_product = false;
+                $isMainProduct = false;
             }
         }
     }
-    $is_add_to_cart_notification = ($controller == 'checkout' && $mode == 'add');
 
-    if ($settings['display_product_details'] == 'Y') {
-        if ($is_add_to_cart_notification || ($is_main_product && $is_product_page)) {
+    $isProductPage = ($controller == 'products' && in_array($mode, array('view', 'options')));
+    $isCategoryPage = ($controller == 'categories' && in_array($mode, array('view')));
+    $isAddToCartNotification = ($controller == 'checkout' && $mode == 'add');
+    $categoryPageHooks = ['products:product_labels'];
+
+//    aa(['$hook' => $hook, '$categoryPageHooks' => $categoryPageHooks]);
+    if ($isCategoryPage && in_array($hook, $categoryPageHooks)) {
+        // todo ws@
+        $isPre = ($position == 'pre' && $settings['display_product_details_position'] == 'before');
+        $isPost = ($position == 'post' && $settings['display_product_details_position'] == 'after');
+        $standard_hook_enabled = (isset($settings['display_product_details_hooks'][$hook]) && $settings['display_product_details_hooks'][$hook] == 'Y');
+
+        if ($standard_hook_enabled && ($isPre || $isPost)) {
+            return fn_free_shipping_incentive_format_text($settings, $product, $returnAsObject);
+        }
+    } else if ($settings['display_product_details'] == 'Y') {
+        if ($isAddToCartNotification || ($isMainProduct && $isProductPage)) {
             $standard_hook_enabled = (isset($settings['display_product_details_hooks'][$hook]) && $settings['display_product_details_hooks'][$hook] == 'Y');
             $custom_hook_enabled = (isset($settings['display_product_details_custom_hooks']) && $settings['display_product_details_custom_hooks'] == $hook);
-            $is_pre = ($position == 'pre' && $settings['display_product_details_position'] == 'before');
-            $is_post = ($position == 'post' && $settings['display_product_details_position'] == 'after');
+            $isPre = ($position == 'pre' && $settings['display_product_details_position'] == 'before');
+            $isPost = ($position == 'post' && $settings['display_product_details_position'] == 'after');
             if ($standard_hook_enabled || $custom_hook_enabled) {
-                if ($is_pre || $is_post) {
-                    return fn_free_shipping_incentive_format_text($settings, $product);
+                if ($isPre || $isPost) {
+                    return fn_free_shipping_incentive_format_text($settings, $product, $returnAsObject);
                 }
             }
         }
-
     }
+
 
     return false;
 }
@@ -321,12 +335,6 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
         $variables['source_type'] = 'individual_product_free_shipping';
         $variables['source_name'] = $free_shipping_product_in_cart['product'];
     } else {
-        // if shipping calculation was already performed for this configuration (product,cart), return cached results
-
-        // if (isset($cache[$hash])) {
-        //     return $cache[$hash];
-        // }
-
         // if cart empty, add current product to local $cart to estimate if there's any free shipping available
         if (empty($cart['products'])) {
             $product_data = array(
@@ -416,13 +424,19 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
                 }
             }
         }
+        if (defined('FREE_SHIPPING_INCENTIVE_CHOSEN_SHIPPING_ONLY') && FREE_SHIPPING_INCENTIVE_CHOSEN_SHIPPING_ONLY === true) {
+            $variables['flag_chosen_shipping_only'] = true;
+        }
 
         // Check lowest Free-Shipping-Threshold in shipping list.
         if (!empty($shippings)) {
             foreach ($shippings as $shipping) {
-                if (!empty($cart['chosen_shipping']) && !in_array($shipping['shipping_id'], $cart['chosen_shipping'])) {
-                    continue;
+                if ($variables['flag_chosen_shipping_only']) {
+                    if (!empty($cart['chosen_shipping']) && !in_array($shipping['shipping_id'], $cart['chosen_shipping'])) {
+                        continue;
+                    }
                 }
+
                 if (empty($shipping['rate_info']) || empty($shipping['rate_info']['rate_value'])) {
                     continue;
                 }
@@ -463,8 +477,6 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
         }
     }
 
-
-
     if (!$has_free_shipping_rate) {
         $cache[$hash] = false;
         return false;
@@ -488,37 +500,37 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
         $variables['needed_amount'] = $min_required_amount - $currentCartAmount;
     }
 
+    $textCase = null;
 
     if ($variables['source_type'] == 'individual_product_free_shipping') {
         if ($variables['cart_empty']) {
-            $text = $settings['display_product_details_text_eligible_individual_item'];
+            $textCase = 'display_product_details_text_eligible_individual_item';
         } else {
             if ($variables['current_product_in_cart']) {
-                $text = $settings['display_product_details_text_eligible'];
+                $textCase = 'display_product_details_text_eligible';
             } else {
-                $text = $settings['display_product_details_text_eligible_individual_item'];
+                $textCase = 'display_product_details_text_eligible_individual_item';
             }
         }
     } else {
         if ($variables['cart_empty']) {
             // this is the potential cart total (if the customer would've add current product)
             if ($currentCartAmount >= $min_required_amount) {
-                $text = $settings['display_product_details_text_ineligible_add_this'];
+                $textCase = 'display_product_details_text_ineligible_add_this';
             } else {
-                $text = $settings['display_product_details_text_ineligible_empty_cart'];
+                $textCase = 'display_product_details_text_ineligible_empty_cart';
             }
         } else if ($currentCartAmount >= $min_required_amount) {
-            $text = $settings['display_product_details_text_eligible'];
-        } else if (!$variables['current_product_in_cart'] && $product['price'] + $currentCartAmount >= $min_required_amount) {
-            $text = $settings['display_product_details_text_ineligible_add_this'];
+            $textCase = 'display_product_details_text_eligible';
+        } else if ($product['price'] + $currentCartAmount >= $min_required_amount) {
+            $textCase = 'display_product_details_text_ineligible_add_this';
         } else {
-            $text = $settings['display_product_details_text_ineligible_add_more'];
+            $textCase = 'display_product_details_text_ineligible_add_more';
         }
     }
-
-
-
-    $variables['text'] = $text;
+    $variables['badge_text'] = $settings['display_product_label_text_eligible'];
+    $variables['text_case'] = $textCase;
+    $variables['text'] = $settings[$textCase];
     $cache[$hash] = $variables;
 
     return $variables;
@@ -530,7 +542,7 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
  *
  * @return bool|mixed
  */
-function fn_free_shipping_incentive_format_text($settings, $product)
+function fn_free_shipping_incentive_format_text($settings, $product, $returnAsObject = false)
 {
     $cart = isset($_SESSION['cart']) ? $_SESSION['cart'] : array();
     $auth = isset($_SESSION['auth']) ? $_SESSION['auth'] : array();
@@ -540,7 +552,6 @@ function fn_free_shipping_incentive_format_text($settings, $product)
     }
 
     $text = $variables['text'];
-
     static $currency = null;
     static $trailingZeros = null;
     if ($currency === null) {
@@ -557,6 +568,10 @@ function fn_free_shipping_incentive_format_text($settings, $product)
             $value = str_replace($trailingZeros, '', $value);
         }
         $text = str_replace($search, $value, $text);
+    }
+    $variables['text_final'] = $text;
+    if ($returnAsObject) {
+        return $variables;
     }
 
     return $text;

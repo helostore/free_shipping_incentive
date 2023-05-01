@@ -48,3 +48,8 @@ msgstr "Customer country (shipping)"
 msgctxt "SettingsTooltips::free_shipping_incentive::display_product_details"
 msgid "Enables incentive messages"
 msgstr "Enables incentive messages"
+
+msgctxt "SettingsTooltips::free_shipping_incentive::display_product_label_text_eligible"
+msgid "Short incentive text being displayed over product's image when adding it to cart would offer free shipping. <br /><small><em>Note: currently this badge can be displayed only in one position, ie. `products:product_labels` hook.</em></small>"
+msgstr "Short incentive text being displayed over product's image  when adding it to cart would offer free shipping. <br /><small><em>Note: currently this badge can be displayed only in one position, ie. `products:product_labels` hook.</em></small>"
+

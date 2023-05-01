@@ -13,3 +13,10 @@
  */
 
 define('FREE_SHIPPING_INCENTIVE_ADDON_DIR', dirname(__FILE__));
+
+// Uncomment line below to prevent "Free Shipping Incentive" add-on from considering shipping methods other than the one chosen by the User
+//const FREE_SHIPPING_INCENTIVE_CHOSEN_SHIPPING_ONLY = true;
+
+
+// Uncomment line below to enable debugging mode that shows real-time information regarding the Free Shipping calculations
+//const FREE_SHIPPING_INCENTIVE_DISPLAY_DEBUG = true;
