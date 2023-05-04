@@ -11,7 +11,7 @@
     <settings layout="separate" edition_type="ROOT,ULT:VENDOR">
         <sections>
             <section id="product_details">
-                <name>Product page</name>
+                <name>Incentive Text Block</name>
                 <items>
                     <item id="display_product_details">
                         <type>checkbox</type>
@@ -59,17 +59,6 @@
                         <default_value><![CDATA[Add this product and get free delivery.]]></default_value>
                     </item>
 
-                    <item id="display_product_label_header">
-                        <type>header</type>
-                        <name>Incentive Badge</name>
-                    </item>
-                    <item id="display_product_label_text_eligible">
-                        <type>textarea</type>
-                        <name>Call-to-Action Badge Text</name>
-                        <default_value><![CDATA[FREE SHIPPING]]></default_value>
-                    </item>
-
-
                     <item id="header">
                         <type>header</type>
                         <name>Where to display</name>
@@ -99,11 +88,8 @@
                             <item id="products:notification_items">
                                 <name>products:notification_items</name>
                             </item>
-                            <item id="products:product_labels">
-                                <name>products:product_labels</name>
-                            </item>
                         </variants>
-                        <default_value>products:add_to_cart=Y,products:product_labels=Y</default_value>
+                        <default_value>products:add_to_cart=Y</default_value>
                     </item>
                     <item id="display_product_details_custom_hooks">
                         <type>input</type>
@@ -125,6 +111,40 @@
                     <item id="display_product_details_hooks_info">
                         <type>info</type>
                         <handler>fn_free_shipping_incentive_display_product_details_hooks_info</handler>
+                    </item>
+                </items>
+            </section>
+            <section id="badge_section">
+                <name>Incentive Badge</name>
+                <items>
+                    <item id="display_product_label_header">
+                        <type>header</type>
+                        <name>Incentive Badge</name>
+                    </item>
+                    <item id="display_product_label_text_eligible">
+                        <type>textarea</type>
+                        <name>Badge Text</name>
+                        <default_value><![CDATA[FREE SHIPPING]]></default_value>
+                    </item>
+                    <item id="display_product_label_on">
+                        <type>multiple checkboxes</type>
+                        <variants>
+                            <item id="product_page"><name>Product Page</name></item>
+                            <item id="search_page"><name>Search Page</name></item>
+                            <item id="category_page"><name>Category Page</name></item>
+                            <item id="home_page"><name>Home Page</name></item>
+                            <item id="bestsellers_page"><name>Bestsellers Page</name></item>
+                            <item id="sales_page"><name>Sales Page</name></item>
+                            <item id="newest_page"><name>Newest Products Page</name></item>
+                            <item id="product_quick_view_page"><name>Product Quick View</name></item>
+                            <item id="product_features_page"><name>Product Features View</name></item>
+                        </variants>
+                        <default_value>product_page</default_value>
+                    </item>
+
+                    <item id="info">
+                        <type>info</type>
+                        <handler>__,free_shipping_incentive_display_product_label_performance_warning</handler>
                     </item>
                 </items>
             </section>
@@ -160,12 +180,17 @@
             </gd>
         </php_extensions>
         <dependencies>sidekick</dependencies>
+        <core_edition>
+            ULTIMATE,MULTIVENDOR
+        </core_edition>
         <core_version>
             <min>4.2.1</min>
+            <max>5.0.0</max>
         </core_version>
     </compatibility>
     <supplier>HELOstore</supplier>
     <supplier_link>https://helostore.com/</supplier_link>
+    <supplier_page>https://helostore.com/</supplier_page>
     <authors>
         <author>
             <name>HELOstore</name>

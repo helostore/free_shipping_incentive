@@ -237,22 +237,35 @@ function fn_free_shipping_incentive_display($hook, $position, $product, $returnA
         }
     }
 
-    $isProductPage = ($controller == 'products' && in_array($mode, array('view', 'options', 'quick_view', 'bestsellers', 'on_sale')));
-    $isCategoryPage = ($controller == 'categories' && $mode === 'view');
-    $isSearchPage = ($controller == 'products' && $mode === 'search');
-    $isAddToCartNotification = ($controller == 'checkout' && $mode == 'add');
-    $categoryPageHooks = ['products:product_labels'];
+    $badgeHooks = ['products:product_labels'];
 
-    if (($isCategoryPage || $isSearchPage) && in_array($hook, $categoryPageHooks)) {
-        // todo ws@
-        $isPre = ($position == 'pre' && $settings['display_product_details_position'] == 'before');
-        $isPost = ($position == 'post' && $settings['display_product_details_position'] == 'after');
-        $standard_hook_enabled = (isset($settings['display_product_details_hooks'][$hook]) && $settings['display_product_details_hooks'][$hook] == 'Y');
-
-        if ($standard_hook_enabled && ($isPre || $isPost)) {
-            return fn_free_shipping_incentive_format_text($settings, $product, $returnAsObject);
+    if (in_array($hook, $badgeHooks)) {
+        $badgePages = [
+            ['name' => 'product_page',            'controller' => 'products',           'mode' => ['view', 'options']],
+            ['name' => 'search_page',             'controller' => 'products',           'mode' => ['search']],
+            ['name' => 'category_page',           'controller' => 'categories',         'mode' => ['view']],
+            ['name' => 'home_page',               'controller' => 'index',              'mode' => ['index']],
+            ['name' => 'bestsellers_page',        'controller' => 'products',           'mode' => ['bestsellers']],
+            ['name' => 'sales_page',              'controller' => 'products',           'mode' => ['on_sale']],
+            ['name' => 'newest_page',             'controller' => 'products',           'mode' => ['newest']],
+            ['name' => 'product_quick_view_page', 'controller' => 'products',           'mode' => ['quick_view']],
+            ['name' => 'product_features_page',   'controller' => 'product_features',   'mode' => ['view']],
+        ];
+        foreach ($badgePages as $page) {
+            $isBadgeEnabledOnPage = (isset($settings['display_product_label_on'][$page['name']]) && $settings['display_product_label_on'][$page['name']] === 'Y');
+            $isUserOnPage = ($controller === $page['controller'] && in_array($mode, $page['mode']));
+            if ($isBadgeEnabledOnPage && $isUserOnPage) {
+                $isPre = ($position == 'pre' && $settings['display_product_details_position'] == 'before');
+                $isPost = ($position == 'post' && $settings['display_product_details_position'] == 'after');
+                if ($isPre || $isPost) {
+                    return fn_free_shipping_incentive_format_text($settings, $product, $returnAsObject);
+                }
+            }
         }
     } else if ($settings['display_product_details'] == 'Y') {
+        $isAddToCartNotification = ($controller == 'checkout' && $mode == 'add');
+        $isProductPage = ($controller == 'products' && in_array($mode, array('view', 'options')));
+
         if ($isAddToCartNotification || ($isMainProduct && $isProductPage)) {
             $standard_hook_enabled = (isset($settings['display_product_details_hooks'][$hook]) && $settings['display_product_details_hooks'][$hook] == 'Y');
             $custom_hook_enabled = (isset($settings['display_product_details_custom_hooks']) && $settings['display_product_details_custom_hooks'] == $hook);
@@ -335,15 +348,19 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
     } else {
         // if cart empty, add current product to local $cart to estimate if there's any free shipping available
         if (empty($cart['products'])) {
-            $product_data = array(
-                $product['product_id'] => array(
-                    'amount' => 1,
-                    'product_id' => $product['product_id'],
-                ),
-            );
-            fn_add_product_to_cart($product_data, $cart, $auth);
-            $cart['change_cart_products'] = true;
-            fn_calculate_cart_content($cart, $auth, 'S', true, 'F', false);
+            if (!empty($product['price']) && $product['price'] > 0) {
+                $product_data = array(
+                    $product['product_id'] => array(
+                        'amount' => 1,
+                        'product_id' => $product['product_id'],
+                    ),
+                );
+                fn_add_product_to_cart($product_data, $cart, $auth);
+                $cart['change_cart_products'] = true;
+                fn_calculate_cart_content($cart, $auth, 'S', true, 'F', false);
+            } else {
+                // do nothing for products without prices
+            }
         } else {
 
             $cartCompanyIds = array();
@@ -512,7 +529,7 @@ function fn_free_shipping_incentive_get_variables($settings, $product, $cart, $a
         }
     } else {
         if ($variables['cart_empty']) {
-            // this is the potential cart total (if the customer would've add current product)
+            // this is the potential cart total (if the customer would've added current product)
             if ($currentCartAmount >= $min_required_amount) {
                 $textCase = 'display_product_details_text_ineligible_add_this';
             } else {
